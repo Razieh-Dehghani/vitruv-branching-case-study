@@ -1,0 +1,142 @@
+# fix(Vitruv): scenario 2.2 indirect conflict detection
+diff --git a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/ChangeDtoDeserializer.java b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/ChangeDtoDeserializer.java
+index dd130e7..d8d2d70 100644
+--- a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/ChangeDtoDeserializer.java
++++ b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/ChangeDtoDeserializer.java
+@@ -125,7 +125,11 @@ public class ChangeDtoDeserializer {
+     private EChange<HierarchicalId> deserializeDelete(SemanticChangeLog.ChangeDto dto) {
+         DeleteEObject<HierarchicalId> c = EobjectFactory.eINSTANCE.createDeleteEObject();
+         c.setAffectedElement(hidOrCache(dto.affectedElementId));
+-        c.setAffectedEObjectType(resolveEClass(dto.affectedEObjectType));
++        // affectedEObjectType is not populated by SemanticChangeEntryToChangeDtoConverter;
++        // fall back to affectedEClassName (same as in deserializeCreate).
++        String typeName = dto.affectedEObjectType != null
++                ? dto.affectedEObjectType : dto.affectedEClassName;
++        c.setAffectedEObjectType(resolveEClass(typeName));
+         return c;
+     }
+ 
+diff --git a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/SemanticMergeEngine.java b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/SemanticMergeEngine.java
+index c61cc45..01a3d39 100644
+--- a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/SemanticMergeEngine.java
++++ b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/SemanticMergeEngine.java
+@@ -181,8 +181,25 @@ public class SemanticMergeEngine {
+         // 5. If reverse had direct conflicts (no resolver), return forward result as-is
+         //    (direct conflicts are symmetric, so this shouldn't happen if forward succeeded)
+         if (!reverseResult.isSuccess()) {
+-            LOGGER.warn("Reverse merge (B→A) failed with direct conflicts -- returning forward result");
+-            return forwardResult;
++            boolean reverseNotApplicable = reverseResult.getConflicts().stream()
++                    .anyMatch(c -> c.getType() == MergeConflict.ConflictType.REPLAY_APPLICABILITY);
++            if (!reverseNotApplicable) {
++                LOGGER.warn("Reverse merge (B→A) failed with direct conflicts -- returning forward result");
++                return forwardResult;
++            }
++            // Reverse replay is not applicable (B's user change targets an element that reactions
++            // deleted on A), and forward replay had derived(A) overwrite user(B): true conflict.
++            LOGGER.warn("Reverse merge (B→A) not applicable -- escalating to true conflict");
++            MergeTracer.trace("[BIDIR] Reverse merge (B→A) not applicable → BIDIRECTIONAL_INDIRECT_CONFLICT");
++            List<MergeConflict> notApplicable = new ArrayList<>();
++            for (MergeConflict ic : forwardIndirect) {
++                notApplicable.add(new MergeConflict(
++                        ic.getElementId(),
++                        MergeConflict.ConflictType.BIDIRECTIONAL_INDIRECT_CONFLICT,
++                        ic.getElementUuid(), ic.getConflictingFeature(),
++                        ic.getBaseValue(), ic.getOursValue(), ic.getTheirsValue()));
++            }
++            return SemanticMergeResult.conflict(notApplicable);
+         }
+ 
+         // 6. Check for indirect conflicts in reverse direction
+@@ -1113,6 +1130,25 @@ public class SemanticMergeEngine {
+                 Map<String, Object> preReplayValues = snapshotUserFootprintValues(
+                         oursUserFootprints, uuidToElement);
+ 
++                // Guard: replay resolves elements positionally, so an attribute change on an element
++                // that existed in base but is gone on the target (deleted by a reaction, i.e. not in
++                // ours' user changes) would silently hit whatever element now occupies its position.
++                Set<String> oursDeletedUuids = collectDeletedUuids(oursDtos);
++                for (var dto : txnDtos) {
++                    if (dto.affectedElementUuid == null) continue;
++                    boolean attributeChange = "ReplaceSingleValuedEAttribute".equals(dto.changeType)
++                            || "InsertEAttributeValue".equals(dto.changeType)
++                            || "RemoveEAttributeValue".equals(dto.changeType);
++                    if (attributeChange
++                            && baseUuidToElement.containsKey(dto.affectedElementUuid)
++                            && !uuidToElement.containsKey(dto.affectedElementUuid)
++                            && !oursDeletedUuids.contains(dto.affectedElementUuid)) {
++                        throw new IllegalStateException("Cannot apply " + dto.changeType + " on '"
++                                + dto.featureName + "': element " + dto.affectedElementUuid
++                                + " was deleted on the target branch (derived deletion)");
++                    }
++                }
++
+                 // Fresh deserializer per transaction (resets cache ID counter)
+                 ChangeDtoDeserializer deserializer =
+                         new ChangeDtoDeserializer(null, oursUriPrefix);
+@@ -1138,9 +1174,10 @@ public class SemanticMergeEngine {
+                 // Catches derived(A) overwrites that PropagatedChange misses.
+                 Set<String> theirsDirectFootprints = collectUuidFootprints(txnDtos);
+                 Map<String, EObject> postReplayMap = buildUuidMap(targetVsum);
++                Set<String> theirsDeletedUuids = collectDeletedUuids(txnDtos);
+                 txnIndirect.addAll(detectIndirectConflictsViaSnapshot(
+                         preReplayValues, oursUserFootprints, theirsDirectFootprints,
+-                        postReplayMap));
++                        theirsDeletedUuids, postReplayMap));
+ 
+                 // Deduplicate by footprint
+                 int indirectBefore = indirectConflicts.size();
+@@ -2004,6 +2041,7 @@ public class SemanticMergeEngine {
+             Map<String, Object> preReplayValues,
+             Set<String> oursUserFootprints,
+             Set<String> theirsDirectFootprints,
++            Set<String> theirsDeletedUuids,
+             Map<String, EObject> uuidToElement) {
+ 
+         List<MergeConflict> conflicts = new ArrayList<>();
+@@ -2022,7 +2060,20 @@ public class SemanticMergeEngine {
+             String featureName = parts[1];
+ 
+             EObject element = uuidToElement.get(uuid);
+-            if (element == null) continue;
++            if (element == null) {
++                // The element existed before the replay (it has a snapshot) but is gone now.
++                // If theirs did not delete it directly, a reaction (derived(replay(A))) deleted
++                // an element that user(B) modified.
++                if (!theirsDeletedUuids.contains(uuid)) {
++                    conflicts.add(new MergeConflict(
++                            uuid, MergeConflict.ConflictType.INDIRECT_CONFLICT,
++                            uuid, featureName,
++                            String.valueOf(oldValue), String.valueOf(oldValue), null));
++                    LOGGER.warn("Indirect conflict (snapshot): derived(replay(A)) deleted "
++                            + "element modified by user(B): uuid={}, feature={}", uuid, featureName);
++                }
++                continue;
++            }
+             var feature = element.eClass().getEStructuralFeature(featureName);
+             if (feature == null) continue;
+             Object newValue = element.eGet(feature);
+@@ -2042,6 +2093,23 @@ public class SemanticMergeEngine {
+         return conflicts;
+     }
+ 
++    /**
++     * Collects the UUIDs of all elements deleted directly (user-authored) in the given DTOs,
++     * including cascade-deleted children.
++     */
++    private static Set<String> collectDeletedUuids(List<SemanticChangeLog.ChangeDto> dtos) {
++        Set<String> uuids = new HashSet<>();
++        for (SemanticChangeLog.ChangeDto dto : dtos) {
++            if ("DeleteEObject".equals(dto.changeType) && dto.affectedElementUuid != null) {
++                uuids.add(dto.affectedElementUuid);
++            }
++            if (dto.cascadeDeletedUuids != null) {
++                uuids.addAll(dto.cascadeDeletedUuids);
++            }
++        }
++        return uuids;
++    }
++
+     // Trace formatting helpers
+ 
+     /**

@@ -1,0 +1,18 @@
+# fix(Vitruv): detect modify-modify conflicts between references
+diff --git a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/UuidConflictDetector.java b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/UuidConflictDetector.java
+index 56cb851..c2eb8fe 100644
+--- a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/UuidConflictDetector.java
++++ b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/UuidConflictDetector.java
+@@ -79,8 +79,11 @@ public class UuidConflictDetector {
+             ChangeDto ours = oursModifications.get(key);
+             ChangeDto theirs = theirsModifications.get(key);
+ 
++            Object oursValue = "ReplaceSingleValuedEReference".equals(ours.changeType) ? ours.newValueId : ours.newLiteralValue;
++            Object theirsValue = "ReplaceSingleValuedEReference".equals(theirs.changeType) ? theirs.newValueId : theirs.newLiteralValue;
++
+             // Check if they set different values
+-            if (!Objects.equals(ours.newLiteralValue, theirs.newLiteralValue)) {
++            if (!Objects.equals(oursValue, theirsValue)) {
+                 String uuid = ours.affectedElementUuid;
+                 conflicts.add(new MergeConflict(
+                         ours.affectedElementId,

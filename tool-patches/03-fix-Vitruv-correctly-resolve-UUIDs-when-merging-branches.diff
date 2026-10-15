@@ -1,0 +1,254 @@
+# fix(Vitruv): correctly resolve UUIDs when merging branches
+diff --git a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/MergeManager.java b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/MergeManager.java
+index 149a5e5..db9fc8d 100644
+--- a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/MergeManager.java
++++ b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/MergeManager.java
+@@ -732,7 +732,7 @@ public class MergeManager {
+           logLabel,
+           baseSha.substring(0, 7), oursSha.substring(0, 7), theirsSha.substring(0, 7));
+ 
+-      SemanticMergeResult engineResult = engine.merge(baseSha, oursSha, theirsSha);
++      SemanticMergeResult engineResult = engine.merge(baseSha, oursSha, theirsSha, targetBranch, sourceBranch);
+ 
+       if (!engineResult.isSuccess()) {
+         LOGGER.warn("{} merge could not complete successfully", logLabel);
+@@ -755,6 +755,7 @@ public class MergeManager {
+       Path mergedFolder = engineResult.getMergedStateFolder();
+       if (mergedFolder != null && Files.isDirectory(mergedFolder)) {
+         copiedFiles = copyMergedModelFiles(mergedFolder, repoRoot);
++        copyMergedVsumMetadata(mergedFolder, repoRoot);
+       }
+ 
+       PersonIdent ident = new PersonIdent("Vitruvius", "vitruvius@system");
+@@ -780,9 +781,6 @@ public class MergeManager {
+       markAsMerged(git, sourceBranch);
+       copyChangelogsFromSourceToTarget(git, sourceBranch, targetBranch);
+       writeMergeTrigger(result, sourceBranch, targetBranch);
+-      if (postMergeHandler != null) {
+-        postMergeHandler.copyVsumFromSourceBranch(sourceBranch, targetBranch);
+-      }
+       postMergeReload.run();
+       if (deleteAfterMerge) {
+         deleteSourceBranch(git, sourceBranch);
+@@ -798,6 +796,37 @@ public class MergeManager {
+     }
+   }
+ 
++  private void copyMergedVsumMetadata(Path mergedFolder, Path repoRoot) throws IOException {
++    Path sourceVsumMeta = mergedFolder.resolve(".vitruvius");
++    if (!Files.isDirectory(sourceVsumMeta)) {
++        LOGGER.warn("No .vitruvius metadata found in merged state folder {}", mergedFolder);
++        return;
++    }
++    Path targetVsumMeta = repoRoot.resolve(".vitruvius");
++
++    String tempAbsolutePath = mergedFolder.toAbsolutePath().toString();
++    String repoAbsolutePath = repoRoot.toAbsolutePath().toString();
++    String tempUriPrefix = org.eclipse.emf.common.util.URI.createFileURI(tempAbsolutePath).toString();
++    String repoUriPrefix = org.eclipse.emf.common.util.URI.createFileURI(repoAbsolutePath).toString();
++
++    try (var stream = Files.walk(sourceVsumMeta)) {
++        List<Path> files = stream.filter(Files::isRegularFile).toList();
++        for (Path p : files) {
++            Path relative = sourceVsumMeta.relativize(p);
++            Path target = targetVsumMeta.resolve(relative);
++            Files.createDirectories(target.getParent());
++
++            // VSUM metadata files (models list, UUID mapping, correspondences) are plain text with embedded 'file://'' URIs. Rewrite the
++            // tempDir prefix to the real repo path so the paths resolve correctly after copying
++            String content = Files.readString(p, java.nio.charset.StandardCharsets.UTF_8);
++            String rewritten = content.replace(tempUriPrefix, repoUriPrefix).replace(tempAbsolutePath, repoAbsolutePath);
++
++            Files.writeString(target, rewritten, java.nio.charset.StandardCharsets.UTF_8);
++        }
++    }
++    LOGGER.info("Copied and rewrote merged VSUM metadata from {} to {}", sourceVsumMeta, targetVsumMeta);
++  }
++
+   /**
+    * Auto-resolves semantic conflicts by replaying EChanges through the merge engine with
+    * the registered {@link #conflictResolutionProvider} consulted per element.
+diff --git a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/ChangeDtoDeserializer.java b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/ChangeDtoDeserializer.java
+index 1668412..dd130e7 100644
+--- a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/ChangeDtoDeserializer.java
++++ b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/ChangeDtoDeserializer.java
+@@ -124,7 +124,7 @@ public class ChangeDtoDeserializer {
+ 
+     private EChange<HierarchicalId> deserializeDelete(SemanticChangeLog.ChangeDto dto) {
+         DeleteEObject<HierarchicalId> c = EobjectFactory.eINSTANCE.createDeleteEObject();
+-        c.setAffectedElement(hid(dto.affectedElementId));
++        c.setAffectedElement(hidOrCache(dto.affectedElementId));
+         c.setAffectedEObjectType(resolveEClass(dto.affectedEObjectType));
+         return c;
+     }
+@@ -149,21 +149,21 @@ public class ChangeDtoDeserializer {
+     private EChange<HierarchicalId> deserializeInsertReference(SemanticChangeLog.ChangeDto dto) {
+         EReference ref = resolveReference(dto.affectedEClassName, dto.featureName);
+         return (EChange<HierarchicalId>) (EChange<?>) FACTORY.createInsertReferenceChange(
+-                hid(dto.affectedElementId), ref, hidOrCache(dto.newValueId), dto.index);
++                hidOrCache(dto.affectedElementId), ref, hidOrCache(dto.newValueId), dto.index);
+     }
+ 
+     @SuppressWarnings("unchecked")
+     private EChange<HierarchicalId> deserializeRemoveReference(SemanticChangeLog.ChangeDto dto) {
+         EReference ref = resolveReference(dto.affectedEClassName, dto.featureName);
+         return (EChange<HierarchicalId>) (EChange<?>) FACTORY.createRemoveReferenceChange(
+-                hid(dto.affectedElementId), ref, hidOrCache(dto.oldValueId), dto.index);
++                hidOrCache(dto.affectedElementId), ref, hidOrCache(dto.oldValueId), dto.index);
+     }
+ 
+     @SuppressWarnings("unchecked")
+     private EChange<HierarchicalId> deserializeReplaceReference(SemanticChangeLog.ChangeDto dto) {
+         EReference ref = resolveReference(dto.affectedEClassName, dto.featureName);
+         return (EChange<HierarchicalId>) (EChange<?>) FACTORY.createReplaceSingleReferenceChange(
+-                hid(dto.affectedElementId), ref, hidOrCache(dto.oldValueId), hidOrCache(dto.newValueId));
++                hidOrCache(dto.affectedElementId), ref, hidOrCache(dto.oldValueId), hidOrCache(dto.newValueId));
+     }
+ 
+     @SuppressWarnings("unchecked")
+@@ -171,7 +171,7 @@ public class ChangeDtoDeserializer {
+         EAttribute attr = resolveAttribute(dto.affectedEClassName, dto.featureName);
+         Object value = convertValue(dto.newLiteralValue, attr);
+         return (EChange<HierarchicalId>) (EChange<?>) FACTORY.createInsertAttributeChange(
+-                hid(dto.affectedElementId), attr, dto.index, value);
++                hidOrCache(dto.affectedElementId), attr, dto.index, value);
+     }
+ 
+     @SuppressWarnings("unchecked")
+@@ -179,7 +179,7 @@ public class ChangeDtoDeserializer {
+         EAttribute attr = resolveAttribute(dto.affectedEClassName, dto.featureName);
+         Object value = convertValue(dto.oldLiteralValue, attr);
+         return (EChange<HierarchicalId>) (EChange<?>) FACTORY.createRemoveAttributeChange(
+-                hid(dto.affectedElementId), attr, dto.index, value);
++                hidOrCache(dto.affectedElementId), attr, dto.index, value);
+     }
+ 
+     @SuppressWarnings("unchecked")
+@@ -188,7 +188,7 @@ public class ChangeDtoDeserializer {
+         Object oldVal = convertValue(dto.oldLiteralValue, attr);
+         Object newVal = convertValue(dto.newLiteralValue, attr);
+         return (EChange<HierarchicalId>) (EChange<?>) FACTORY.createReplaceSingleAttributeChange(
+-                hid(dto.affectedElementId), attr, oldVal, newVal);
++                hidOrCache(dto.affectedElementId), attr, oldVal, newVal);
+     }
+ 
+     /**
+diff --git a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/GitStateLoader.java b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/GitStateLoader.java
+index e1be807..0e104ef 100644
+--- a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/GitStateLoader.java
++++ b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/GitStateLoader.java
+@@ -85,11 +85,12 @@ public class GitStateLoader {
+     public static InternalVirtualModel loadVsumFromDir(
+             Path vsumFolder,
+             Collection<ChangePropagationSpecification> specs,
+-            InteractionResultProvider interactionProvider) throws IOException {
++            InteractionResultProvider interactionProvider,
++            String expectedBranch) throws IOException {
+         // Fix models.models and uuid.uuid in the BranchAwareVirtualModel layout
+         // (.vitruvius/vsum/<branch>/) so the VSUM can find its model resources.
+         // Returns the branch name that was fixed (used to init the scratch git repo).
+-        String activeBranch = fixBranchAwareVsumData(vsumFolder);
++        String activeBranch = fixBranchAwareVsumData(vsumFolder, expectedBranch);
+ 
+         // VsumFileSystemLayout calls Git.open(vsumFolder) during construction to resolve the
+         // current branch name. The temp dir extracted from a git commit is a plain directory
+@@ -136,14 +137,15 @@ public class GitStateLoader {
+      *
+      * @return the branch name whose data was fixed, or {@code null} if no branch dirs found
+      */
+-    private static String fixBranchAwareVsumData(Path vsumFolder) throws IOException {
++    private static String fixBranchAwareVsumData(Path vsumFolder, String expectedBranch) throws IOException {
+         Path vitruviusVsumDir = vsumFolder.resolve(".vitruvius/vsum");
+         if (!Files.isDirectory(vitruviusVsumDir)) return null;
+ 
+         String folderUri = org.eclipse.emf.common.util.URI.createFileURI(
+                 vsumFolder.toAbsolutePath().toString()).toString();
+ 
+-        String preferredBranch = null;
++        String matchedBranch = null;
++        String fallbackBranch = null;
+         List<Path> branchDirList = new java.util.ArrayList<>();
+         try (var stream = Files.list(vitruviusVsumDir)) {
+             stream.filter(Files::isDirectory).forEach(branchDirList::add);
+@@ -154,14 +156,21 @@ public class GitStateLoader {
+             fixModelsFile(branchDir.resolve("models.models"), vsumFolder, folderUri);
+             fixUuidFile(branchDir.resolve("uuid.uuid"), folderUri);
+             fixCorrespondenceFile(branchDir.resolve("correspondences.correspondence"), folderUri);
+-            if (preferredBranch == null || "main".equals(branchName)) {
+-                preferredBranch = branchName;
++            if (expectedBranch != null && expectedBranch.equals(branchName)) {
++                matchedBranch = branchName;
+             }
++            if (fallbackBranch == null) {
++                fallbackBranch = branchName;
++            }
++        }
++        String chosen = matchedBranch != null ? matchedBranch : fallbackBranch;
++        if (expectedBranch != null && matchedBranch == null) {
++            LOGGER.warn("Expected VSUM branch dir '{}' not found among {} - falling back to '{}'", expectedBranch, branchDirList, chosen);
+         }
+-        if (preferredBranch != null) {
+-            LOGGER.info("Fixed VSUM data in {} branch dir(s), preferred branch: {}", branchDirList.size(), preferredBranch);
++        if (chosen != null) {
++            LOGGER.info("Fixed VSUM data in {} branch dir(s), selected branch: {}", branchDirList.size(), chosen);
+         }
+-        return preferredBranch;
++        return chosen;
+     }
+ 
+     /**
+diff --git a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/SemanticMergeEngine.java b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/SemanticMergeEngine.java
+index 8879959..c61cc45 100644
+--- a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/SemanticMergeEngine.java
++++ b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/SemanticMergeEngine.java
+@@ -568,7 +568,7 @@ public class SemanticMergeEngine {
+         String uriPrefix = org.eclipse.emf.common.util.URI.createFileURI(
+                 baseWorkDir.toAbsolutePath().toString()).toString();
+ 
+-        InternalVirtualModel vsum = GitStateLoader.loadVsumFromDir(baseWorkDir, specs, interactionProvider);
++        InternalVirtualModel vsum = GitStateLoader.loadVsumFromDir(baseWorkDir, specs, interactionProvider, null);
+ 
+         List<EChange<HierarchicalId>> allApplied = new ArrayList<>();
+ 
+@@ -851,7 +851,7 @@ public class SemanticMergeEngine {
+         String uriPrefix = org.eclipse.emf.common.util.URI.createFileURI(
+                 baseWorkDir.toAbsolutePath().toString()).toString();
+ 
+-        InternalVirtualModel vsum = GitStateLoader.loadVsumFromDir(baseWorkDir, specs, interactionProvider);
++        InternalVirtualModel vsum = GitStateLoader.loadVsumFromDir(baseWorkDir, specs, interactionProvider, null);
+ 
+         List<EChange<HierarchicalId>> allApplied = new ArrayList<>();
+         int aIdx = 0, bIdx = 0;
+@@ -916,9 +916,13 @@ public class SemanticMergeEngine {
+                 .collect(Collectors.joining(", ", "[", "]"));
+     }
+ 
+-
+     public SemanticMergeResult merge(String baseSha, String oursSha, String theirsSha)
+             throws IOException, GitAPIException {
++        return merge(baseSha, oursSha, theirsSha, null, null);
++    }
++
++    public SemanticMergeResult merge(String baseSha, String oursSha, String theirsSha, String targetBranch, String sourceBranch)
++            throws IOException, GitAPIException {
+ 
+         LOGGER.info("Semantic merge: base={}, ours={}, theirs={}",
+                 baseSha.substring(0, 7), oursSha.substring(0, 7), theirsSha.substring(0, 7));
+@@ -1048,7 +1052,7 @@ public class SemanticMergeEngine {
+         }
+ 
+         // 5. Load target VSUM from ours state
+-        InternalVirtualModel targetVsum = GitStateLoader.loadVsumFromDir(oursDir, specs, interactionProvider);
++        InternalVirtualModel targetVsum = GitStateLoader.loadVsumFromDir(oursDir, specs, interactionProvider, targetBranch);
+         // Use EMF URI format for the target prefix (the deserializer extracts filename
+         // from source IDs and prepends this prefix)
+         String oursUriPrefix = org.eclipse.emf.common.util.URI.createFileURI(
+@@ -1057,7 +1061,7 @@ public class SemanticMergeEngine {
+         // 5b. Load base VSUM for USER_VS_DERIVED_WARNING comparison.
+         // We need base values to distinguish "unchanged base" from "derived by reactions on B".
+         // Only warn when B's value differs from the base (truly derived), not when it's unchanged.
+-        InternalVirtualModel baseVsum = GitStateLoader.loadVsumFromDir(baseDir, specs, interactionProvider);
++        InternalVirtualModel baseVsum = GitStateLoader.loadVsumFromDir(baseDir, specs, interactionProvider, null);
+         Map<String, EObject> baseUuidToElement = buildUuidMap(baseVsum);
+         baseVsum.dispose();
+ 

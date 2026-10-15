@@ -1,0 +1,158 @@
+import java.util.Arrays;
+
+import "http://vitruv.tools/methodologisttemplate/sysml" as sysml
+import "http://vitruv.tools/cad/model" as cad
+
+reactions: valueProperty2CadParameter
+in reaction to changes in sysml
+execute actions in cad
+
+// Insert a SysML ValueProperty into a SysML Block.
+// As reaction, the following happens:
+// - If there is a CAD Parameter with the same name in the CAD Namepsace corresponding to the SysML Block, make the ValueProperty and the
+//   CAD Parameter corresponding.
+// - If there is no CAD Parameter with the same name, ask the user whether to create a corresponding CAD Parameter of some type.
+reaction ValuePropertyInsertedIntoBlock {
+    after element sysml::ValueProperty inserted in sysml::Block[values]
+    call createAndInsertCadParameter(affectedEObject, newValue)
+}
+
+routine createAndInsertCadParameter(sysml::Block block, sysml::ValueProperty valueProperty) {
+    match {
+        val namespaces = retrieve many cad::Namespace corresponding to block
+    }
+    create {
+        val numericParameter = new cad::NumericParameter
+        val stringParameter = new cad::StringParameter
+        val booleanParameter = new cad::BooleanParameter
+    }
+    update {
+        for (namespace : namespaces) {
+            val correspondingParameter = namespace.parameters.findFirst[p | p.name == valueProperty.name]
+
+            if (correspondingParameter !== null) {
+                // Make the existing parameter corresponding to the value property
+                addCorrespondenceBetween(valueProperty, correspondingParameter)
+
+                removeObject(numericParameter)
+                removeObject(stringParameter)
+                removeObject(booleanParameter)
+            } else {
+                // Ask the user whether to create a CAD parameter
+                val createParameter = userInteractor.singleSelectionDialogBuilder
+                    .message("Create a corresponding CAD parameter?")
+                    .choices(Arrays.asList("Numeric", "String", "Boolean", "No"))
+                    .startInteraction
+                
+                if (createParameter == 0) {
+                    // Add numeric parameter
+                    numericParameter.name = valueProperty.name
+                    numericParameter.value = Float.parseFloat(valueProperty.defaultValue)
+
+                    namespace.parameters.add(numericParameter)
+
+                    addCorrespondenceBetween(valueProperty, numericParameter)
+
+                    removeObject(stringParameter)
+                    removeObject(booleanParameter)
+                } else if (createParameter == 1) {
+                    // Add string parameter
+                    stringParameter.name = valueProperty.name
+                    stringParameter.value = valueProperty.defaultValue
+
+                    namespace.parameters.add(stringParameter)
+
+                    addCorrespondenceBetween(valueProperty, stringParameter)
+
+                    removeObject(numericParameter)
+                    removeObject(booleanParameter)
+                } else if (createParameter == 2) {
+                    // Add boolean parameter
+                    booleanParameter.name = valueProperty.name
+                    booleanParameter.value = Boolean.parseBoolean(valueProperty.defaultValue)
+
+                    namespace.parameters.add(booleanParameter)
+
+                    addCorrespondenceBetween(valueProperty, booleanParameter)
+
+                    removeObject(numericParameter)
+                    removeObject(stringParameter)
+                } else {
+                    // Add no parameter
+                    removeObject(numericParameter)
+                    removeObject(stringParameter)
+                    removeObject(booleanParameter)
+                }
+            }
+        }
+    }
+}
+
+// Rename a SysML value property.
+// As reaction, also rename the corresponding CAD parameter.
+reaction ValuePropertyRenamed {
+    after attribute replaced at sysml::ValueProperty[name]
+    call renameCadParameter(affectedEObject)
+}
+
+routine renameCadParameter(sysml::ValueProperty valueProperty) {
+    match {
+        val parameters = retrieve many cad::Parameter corresponding to valueProperty
+    }
+    update {
+        for (parameter : parameters) {
+            parameter.name = valueProperty.name
+        }
+    }
+}
+
+// Change the value of a SysML value property.
+// As reaction, also change the value in the corresponding CAD parameter.
+reaction ValuePropertyValueChanged {
+    after attribute replaced at sysml::ValueProperty[defaultValue]
+    call changeValueInCadParameter(affectedEObject)
+}
+
+routine changeValueInCadParameter(sysml::ValueProperty valueProperty) {
+    match {
+        val parameters = retrieve many cad::Parameter corresponding to valueProperty
+    }
+    update {
+        for (parameter : parameters) {
+            // Verbose because of the type checking
+            if (parameter instanceof cad.NumericParameter) {
+                parameter.value = Float.parseFloat(valueProperty.defaultValue)
+            } else if (parameter instanceof cad.StringParameter) {
+                parameter.value = valueProperty.defaultValue
+            } else if (parameter instanceof cad.BooleanParameter) {
+                parameter.value = Boolean.parseBoolean(valueProperty.defaultValue)
+            }
+        }
+    }
+}
+
+// Delete a SysML value property.
+// As reaction, ask the user whether to delete the corresponding CAD parameter.
+reaction ValuePropertyDeleted {
+    after element sysml::ValueProperty deleted
+    call deleteCadParameter(affectedEObject)
+}
+
+routine deleteCadParameter(sysml::ValueProperty valueProperty) {
+    match {
+        val parameters = retrieve many cad::Parameter corresponding to valueProperty
+    }
+    update {
+        for (parameter : parameters) {
+            // Ask the user whether to delete the corresponding CAD parameter
+            val deleteCadParameter = userInteractor.singleSelectionDialogBuilder
+                .message("Delete the corresponding CAD parameter?")
+                .choices(Arrays.asList("Yes", "No"))
+                .startInteraction
+            
+            removeCorrespondenceBetween(valueProperty, parameter)
+
+            if (deleteCadParameter == 0) removeObject(parameter)
+        }
+    }
+}

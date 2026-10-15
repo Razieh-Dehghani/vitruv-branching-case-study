@@ -1,0 +1,10 @@
+import "http://vitruv.tools/cad/model" as cad
+import "http://vitruv.tools/methodologisttemplate/sysml" as sysml
+
+reactions: cad2Sysml
+in reaction to changes in cad
+execute actions in sysml
+
+import cadModel2SysmlModel using qualified names
+import namespaces2Blocks using qualified names
+import cadParameter2ValueProperty using qualified names

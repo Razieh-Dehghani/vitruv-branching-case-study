@@ -1,0 +1,426 @@
+# fix(Vitruv): correct UUID resolution on element deletion + fast forward metadata fix
+diff --git a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/MergeManager.java b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/MergeManager.java
+index db9fc8d..045fb82 100644
+--- a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/MergeManager.java
++++ b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/MergeManager.java
+@@ -268,6 +268,14 @@ public class MergeManager {
+           writeMergeTrigger(ff, sourceBranch, targetBranch);
+           if (postMergeHandler != null) {
+             postMergeHandler.copyVsumFromSourceBranch(sourceBranch, targetBranch);
++          } else {
++            // A fast-forward is a plain Git ref move: the target branch's own
++            // .vitruvius/vsum/<targetBranch>/ directory is never touched by it and can be
++            // arbitrarily stale relative to the model content the fast-forward just brought
++            // into the working tree (nothing wrote to it while another branch was checked
++            // out). Without this, the postMergeReload below fails with an unresolvable
++            // HierarchicalId. Only needed when no postMergeHandler already does this.
++            PostMergeHandler.copyVsumFromSourceBranch(repoRoot, sourceBranch, targetBranch);
+           }
+           postMergeReload.run();
+           if (deleteAfterMerge) {
+@@ -344,6 +352,12 @@ public class MergeManager {
+         writeMergeTrigger(result, sourceBranch, targetBranch);
+         if (postMergeHandler != null) {
+           postMergeHandler.copyVsumFromSourceBranch(sourceBranch, targetBranch);
++        } else {
++          // Same staleness gap as in the fast-forward path above: this JGit-level merge does
++          // not go through the semantic engine either, so nothing refreshes the target
++          // branch's own .vitruvius/vsum/<targetBranch>/ directory unless a postMergeHandler
++          // is configured to do it.
++          PostMergeHandler.copyVsumFromSourceBranch(repoRoot, sourceBranch, targetBranch);
+         }
+         postMergeReload.run();
+         if (deleteAfterMerge) {
+diff --git a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/handler/PostMergeHandler.java b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/handler/PostMergeHandler.java
+index c4af276..14a9d1e 100644
+--- a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/handler/PostMergeHandler.java
++++ b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/handler/PostMergeHandler.java
+@@ -300,6 +300,24 @@ public class PostMergeHandler {
+    * @param targetBranch the branch that should receive the copied state.
+    */
+   public void copyVsumFromSourceBranch(String sourceBranch, String targetBranch) {
++    copyVsumFromSourceBranch(repositoryRoot, sourceBranch, targetBranch);
++  }
++
++  /**
++   * Static variant of {@link #copyVsumFromSourceBranch(String, String)} that takes the
++   * repository root explicitly, so callers that only have a repository path -- not a full
++   * {@link PostMergeHandler} (which additionally requires an {@link InternalVirtualModel}) --
++   * can perform this purely filesystem-level copy directly.
++   *
++   * <p>{@link MergeManager}'s fast-forward path uses this: a fast-forward is a plain Git ref
++   * move, so the target branch's own {@code .vitruvius/vsum/<targetBranch>/} directory is never
++   * touched by it and can be arbitrarily stale (nothing wrote to it while some other branch was
++   * checked out). Without this copy, the target branch's V-SUM metadata mismatches the model
++   * content the fast-forward just brought into the working tree, and the next
++   * {@code VirtualModel#reload()} fails with an unresolvable {@code HierarchicalId}.
++   */
++  public static void copyVsumFromSourceBranch(Path repositoryRoot, String sourceBranch, String targetBranch) {
++    checkNotNull(repositoryRoot, "repositoryRoot must not be null");
+     checkNotNull(sourceBranch, "sourceBranch must not be null");
+     checkNotNull(targetBranch, "targetBranch must not be null");
+ 
+@@ -320,7 +338,7 @@ public class PostMergeHandler {
+         // git checkout deleted the source branch's VSUM files; read from the object store.
+         LOGGER.info("Filesystem VSUM for '{}' is empty -- restoring from git object store",
+             sourceBranch);
+-        restoreVsumFromObjectStore(sourceBranch, targetVsum);
++        restoreVsumFromObjectStore(repositoryRoot, sourceBranch, targetVsum);
+       }
+     } catch (IOException e) {
+       LOGGER.error("Failed to copy VSUM state from '{}' to '{}': {}",
+@@ -328,7 +346,7 @@ public class PostMergeHandler {
+     }
+   }
+ 
+-  private boolean hasVsumContent(Path vsumDir) {
++  private static boolean hasVsumContent(Path vsumDir) {
+     if (!Files.exists(vsumDir)) {
+       return false;
+     }
+@@ -339,7 +357,7 @@ public class PostMergeHandler {
+     }
+   }
+ 
+-  private void restoreVsumFromObjectStore(String sourceBranch, Path targetVsum)
++  private static void restoreVsumFromObjectStore(Path repositoryRoot, String sourceBranch, Path targetVsum)
+       throws IOException {
+     String prefix = ".vitruvius/vsum/" + sourceBranch + "/";
+     try (var repo = new FileRepositoryBuilder()
+@@ -381,7 +399,7 @@ public class PostMergeHandler {
+     }
+   }
+ 
+-  private void copyDirectory(Path source, Path target) throws IOException {
++  private static void copyDirectory(Path source, Path target) throws IOException {
+     Files.createDirectories(target);
+     try (var stream = Files.walk(source)) {
+       stream.forEach(sourcePath -> {
+@@ -399,7 +417,7 @@ public class PostMergeHandler {
+     }
+   }
+ 
+-  private void deleteDirectory(Path directory) throws IOException {
++  private static void deleteDirectory(Path directory) throws IOException {
+     try (var stream = Files.walk(directory)) {
+       stream.sorted(java.util.Comparator.reverseOrder()).forEach(path -> {
+         try {
+diff --git a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/ChangeDtoDeserializer.java b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/ChangeDtoDeserializer.java
+index d8d2d70..40ad8f6 100644
+--- a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/ChangeDtoDeserializer.java
++++ b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/ChangeDtoDeserializer.java
+@@ -124,7 +124,14 @@ public class ChangeDtoDeserializer {
+ 
+     private EChange<HierarchicalId> deserializeDelete(SemanticChangeLog.ChangeDto dto) {
+         DeleteEObject<HierarchicalId> c = EobjectFactory.eINSTANCE.createDeleteEObject();
+-        c.setAffectedElement(hidOrCache(dto.affectedElementId));
++        // The recorded ID of a deleted element is a placeholder ("cache:/N") that collides with the
++        // cache IDs of elements created during replay, so it must not be looked up in
++        // createdElementCacheIds. Only an element created earlier in this transaction (matched by
++        // UUID) is addressed by its cache ID.
++        String createdCacheId = dto.affectedElementUuid != null
++                ? createdElementCacheIds.get(dto.affectedElementUuid) : null;
++        c.setAffectedElement(createdCacheId != null
++                ? new HierarchicalId(createdCacheId) : hid(dto.affectedElementId));
+         // affectedEObjectType is not populated by SemanticChangeEntryToChangeDtoConverter;
+         // fall back to affectedEClassName (same as in deserializeCreate).
+         String typeName = dto.affectedEObjectType != null
+diff --git a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/SemanticMergeEngine.java b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/SemanticMergeEngine.java
+index e16cfc4..f61f7f8 100644
+--- a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/SemanticMergeEngine.java
++++ b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/SemanticMergeEngine.java
+@@ -933,6 +933,27 @@ public class SemanticMergeEngine {
+                 .collect(Collectors.joining(", ", "[", "]"));
+     }
+ 
++    /**
++     * Checks whether the UUID-based direct conflict detection of {@link #merge} would report
++     * conflicts for the given commits, without replaying anything. Used by the caller to decide
++     * whether the engine has to be involved even though the changelog-level pre-check found none.
++     */
++    public boolean hasDirectConflicts(String baseSha, String oursSha, String theirsSha)
++            throws IOException, GitAPIException {
++        GitStateLoader loader = new GitStateLoader(repoRoot);
++        Path baseDir = GitStateLoader.createTempDir("conflict-check-base-");
++        Path theirsDir = GitStateLoader.createTempDir("conflict-check-theirs-");
++        Path oursDir = GitStateLoader.createTempDir("conflict-check-ours-");
++        loader.checkoutStateAtCommit(baseSha, baseDir);
++        loader.checkoutStateAtCommit(theirsSha, theirsDir);
++        loader.checkoutStateAtCommit(oursSha, oursDir);
++
++        Set<String> baseChangelogPaths = getChangelogRelativePaths(baseDir);
++        List<SemanticChangeLog.ChangeDto> oursDtos = loadAllDtosExcluding(oursDir, baseChangelogPaths);
++        List<SemanticChangeLog.ChangeDto> theirsDtos = loadAllDtosExcluding(theirsDir, baseChangelogPaths);
++        return !new UuidConflictDetector().detectConflicts(oursDtos, theirsDtos).isEmpty();
++    }
++
+     public SemanticMergeResult merge(String baseSha, String oursSha, String theirsSha)
+             throws IOException, GitAPIException {
+         return merge(baseSha, oursSha, theirsSha, null, null);
+@@ -1159,7 +1180,8 @@ public class SemanticMergeEngine {
+                 DerivedChangeCapture derivedCapture = new DerivedChangeCapture();
+                 targetVsum.addChangePropagationListener(derivedCapture);
+ 
+-                replayChanges(targetVsum, txnChanges);
++                replayChanges(targetVsum, txnChanges, Map.of(),
++                        txnDtos.stream().map(d -> d.affectedElementUuid).toList());
+ 
+                 targetVsum.removeChangePropagationListener(derivedCapture);
+                 allApplied.addAll(txnChanges);
+@@ -1317,6 +1339,20 @@ public class SemanticMergeEngine {
+     static void replayChanges(InternalVirtualModel targetVsum,
+                                List<EChange<HierarchicalId>> changes,
+                                Map<String, String> hidToUuidFallback) {
++        replayChanges(targetVsum, changes, hidToUuidFallback, null);
++    }
++
++    /**
++     * Replays changes with UUID-based fallback resolution and per-change UUID verification.
++     *
++     * @param affectedUuids UUID of the affected element of each change (parallel to {@code changes},
++     *        entries may be {@code null}); may itself be {@code null}. When the UUID is known on the
++     *        target, the element is resolved by UUID instead of by its (possibly shifted) position.
++     */
++    static void replayChanges(InternalVirtualModel targetVsum,
++                               List<EChange<HierarchicalId>> changes,
++                               Map<String, String> hidToUuidFallback,
++                               List<String> affectedUuids) {
+ 
+         // Create a ChangeRecordingView on all model objects
+         var selector = targetVsum.createSelector(
+@@ -1338,9 +1374,14 @@ public class SemanticMergeEngine {
+ 
+         // Build UUID-to-EObject fallback map: for each UUID string in the changelog,
+         // find the corresponding EObject in the current VSUM state.
+-        Map<String, EObject> uuidToElement = buildUuidMap(targetVsum);
++        // The view works on its own copy of the models: only changes applied to the view's
++        // elements are recorded and propagated, so the VSUM's elements must be translated to
++        // their counterparts in the view (identical resource URI and fragment at this point).
++        Map<String, EObject> uuidToElement = toViewElements(buildUuidMap(targetVsum), viewRs);
+         // Build HID-to-EObject fallback map: hid string → EObject via UUID bridge
+         Map<String, EObject> hidFallback = new HashMap<>();
++        // Reference changes carry the referenced element as its UUID string; make those resolvable.
++        hidFallback.putAll(uuidToElement);
+         for (var entry : hidToUuidFallback.entrySet()) {
+             String hidStr = entry.getKey();
+             String uuidStr = entry.getValue();
+@@ -1356,15 +1397,74 @@ public class SemanticMergeEngine {
+         // so subsequent InsertEReference can resolve the created element correctly.
+         Map<String, HierarchicalId> cacheIdRemap = new HashMap<>();
+ 
++        // Elements this transaction deletes that exist on the target (matched by UUID), and the
++        // UUIDs of elements it creates itself. Deleted elements are addressed by UUID only: their
++        // recorded placeholder IDs would otherwise collide with cache IDs of created elements.
++        List<EObject> deleteCandidates = new ArrayList<>();
++        Set<String> createdUuids = new HashSet<>();
++        if (affectedUuids != null) {
++            for (int i = 0; i < changes.size() && i < affectedUuids.size(); i++) {
++                String u = affectedUuids.get(i);
++                if (u == null) continue;
++                if (changes.get(i) instanceof tools.vitruv.change.atomic.eobject.CreateEObject<?>) {
++                    createdUuids.add(u);
++                } else if (changes.get(i) instanceof tools.vitruv.change.atomic.eobject.DeleteEObject<?>
++                        && uuidToElement.get(u) != null) {
++                    deleteCandidates.add(uuidToElement.get(u));
++                }
++            }
++        }
++
+         // Apply each change using EMF reflective API (triggers notifications for ChangeRecorder)
+         for (int ci = 0; ci < changes.size(); ci++) {
+             EChange<HierarchicalId> eChange = changes.get(ci);
++
++            if (eChange instanceof tools.vitruv.change.atomic.eobject.DeleteEObject<?>
++                    && affectedUuids != null && ci < affectedUuids.size() && affectedUuids.get(ci) != null
++                    && !uuidToElement.containsKey(affectedUuids.get(ci))
++                    && !createdUuids.contains(affectedUuids.get(ci))) {
++                MergeTracer.trace("           [REPLAY] skip delete of element not present on target: "
++                        + affectedUuids.get(ci));
++                continue;
++            }
++
++            // Resolve the affected element by UUID where possible: positional HierarchicalIds
++            // recorded on the source branch may point at a different element on the target.
++            List<String> uuidKeys = new ArrayList<>();
++            if (affectedUuids != null && ci < affectedUuids.size() && affectedUuids.get(ci) != null) {
++                EObject byUuid = uuidToElement.get(affectedUuids.get(ci));
++                HierarchicalId affectedHid = affectedElementHid(eChange);
++                if (byUuid != null && affectedHid != null) {
++                    String hidStr = affectedHid.getId();
++                    // Cache IDs belong to elements created during this replay -- except for deletes,
++                    // where the recorded ID is a stale placeholder and the UUID is authoritative.
++                    if (!hidStr.startsWith("cache:")
++                            || eChange instanceof tools.vitruv.change.atomic.eobject.DeleteEObject<?>) {
++                        hidFallback.put(hidStr, byUuid);
++                        uuidKeys.add(hidStr);
++                        // applyChangeReflectively looks the element up under its remapped cache ID
++                        String remappedStr = remapCacheId(affectedHid, cacheIdRemap).getId();
++                        if (!remappedStr.equals(hidStr)) {
++                            hidFallback.put(remappedStr, byUuid);
++                            uuidKeys.add(remappedStr);
++                        }
++                        if (hidStr.contains("#")) {
++                            String fragment = hidStr.substring(hidStr.indexOf('#') + 1);
++                            hidFallback.put(fragment, byUuid);
++                            uuidKeys.add(fragment);
++                        }
++                    }
++                }
++            }
+             try {
+-                applyChangeReflectively(eChange, idResolver, hidFallback, cacheIdRemap);
++                applyChangeReflectively(eChange, idResolver, hidFallback, cacheIdRemap, deleteCandidates);
+             } catch (Exception e) {
+                 MergeTracer.trace("[REPLAY] Failed at change " + (ci + 1) + "/" + changes.size()
+                         + ": " + eChange.getClass().getSimpleName() + " -- " + e.getMessage());
+                 throw e;
++            } finally {
++                // Positions are only valid for this one change; do not leak them into later ones.
++                uuidKeys.forEach(hidFallback::remove);
+             }
+         }
+ 
+@@ -1444,6 +1544,39 @@ public class SemanticMergeEngine {
+         return null;
+     }
+ 
++    /**
++     * Translates a UUID → VSUM element map into a UUID → view element map. Must be called before
++     * any change is applied to the view, while resource URIs and fragments still coincide.
++     */
++    private static Map<String, EObject> toViewElements(Map<String, EObject> vsumElements, ResourceSet viewRs) {
++        Map<String, EObject> result = new HashMap<>();
++        for (Map.Entry<String, EObject> entry : vsumElements.entrySet()) {
++            EObject vsumElement = entry.getValue();
++            Resource vsumResource = vsumElement.eResource();
++            if (vsumResource == null) continue;
++            Resource viewResource = viewRs.getResource(vsumResource.getURI(), false);
++            if (viewResource == null) continue;
++            EObject viewElement = viewResource.getEObject(vsumResource.getURIFragment(vsumElement));
++            if (viewElement != null && viewElement.eClass() == vsumElement.eClass()) {
++                result.put(entry.getKey(), viewElement);
++            }
++        }
++        MergeTracer.trace("           [REPLAY] mapped " + result.size() + "/" + vsumElements.size()
++                + " target elements into the replay view");
++        return result;
++    }
++
++    /** Returns the HierarchicalId of the element a feature/delete change applies to, or null. */
++    private static HierarchicalId affectedElementHid(EChange<HierarchicalId> change) {
++        if (change instanceof tools.vitruv.change.atomic.feature.FeatureEChange<HierarchicalId, ?> fc) {
++            return fc.getAffectedElement();
++        }
++        if (change instanceof tools.vitruv.change.atomic.eobject.DeleteEObject<HierarchicalId> de) {
++            return de.getAffectedElement();
++        }
++        return null;
++    }
++
+     /**
+      * Applies a deserialized EChange to the view's model using EMF's reflective API.
+      * Direct calls to eSet/eGet/list.add trigger proper EMF notifications that the
+@@ -1466,7 +1599,8 @@ public class SemanticMergeEngine {
+     private static void applyChangeReflectively(EChange<HierarchicalId> eChange,
+                                           tools.vitruv.change.atomic.hid.internal.HierarchicalIdResolver idResolver,
+                                           Map<String, EObject> hidFallback,
+-                                          Map<String, HierarchicalId> cacheIdRemap) {
++                                          Map<String, HierarchicalId> cacheIdRemap,
++                                          List<EObject> deleteCandidates) {
+         if (eChange instanceof tools.vitruv.change.atomic.eobject.CreateEObject<HierarchicalId> ce) {
+             EObject created = EcoreUtil.create(ce.getAffectedEObjectType());
+             HierarchicalId assignedId = idResolver.getAndUpdateId(created);
+@@ -1486,6 +1620,25 @@ public class SemanticMergeEngine {
+             // Multi-valued features are treated as sets for merge purposes.
+             list.add(newElement);
+ 
++        } else if (eChange instanceof tools.vitruv.change.atomic.feature.reference.ReplaceSingleValuedEReference<HierarchicalId> rsr) {
++            EObject element = resolveElement(remapCacheId(rsr.getAffectedElement(), cacheIdRemap), idResolver, hidFallback);
++            if (element == null) {
++                // The element holding the reference may already be gone (deleted or cascaded).
++                LOGGER.debug("ReplaceSingleValuedEReference: element not resolvable (may be deleted): {}",
++                        rsr.getAffectedElement());
++            } else {
++                EObject newValue = null;
++                if (rsr.getNewValue() != null) {
++                    newValue = resolveElement(remapCacheId(rsr.getNewValue(), cacheIdRemap), idResolver, hidFallback);
++                    if (newValue == null) {
++                        throw new IllegalStateException("Cannot apply ReplaceSingleValuedEReference on '"
++                                + rsr.getAffectedFeature().getName() + "': new value not found for "
++                                + rsr.getNewValue());
++                    }
++                }
++                element.eSet(rsr.getAffectedFeature(), newValue);
++            }
++
+         } else if (eChange instanceof tools.vitruv.change.atomic.feature.attribute.ReplaceSingleValuedEAttribute<HierarchicalId, ?> rsa) {
+             EObject element = resolveElement(remapCacheId(rsa.getAffectedElement(), cacheIdRemap), idResolver, hidFallback);
+             if (element == null) {
+@@ -1504,21 +1657,58 @@ public class SemanticMergeEngine {
+             element.eSet(feature, rsa.getNewValue());
+ 
+         } else if (eChange instanceof tools.vitruv.change.atomic.feature.reference.RemoveEReference<HierarchicalId> rr) {
+-            try {
+-                EObject container = resolveElement(remapCacheId(rr.getAffectedElement(), cacheIdRemap), idResolver, hidFallback);
+-                if (container == null) throw new IllegalStateException("Container not found");
+-                var list = (List<EObject>) container.eGet(rr.getAffectedFeature());
+-                if (rr.getIndex() >= 0 && rr.getIndex() < list.size()) {
+-                    list.remove(rr.getIndex());
+-                }
+-            } catch (Exception e) {
++            // The recorded index is only meaningful in the source branch's own list at capture
++            // time. It can silently remove the wrong element on the target when list lengths or
++            // positions differ -- e.g. because some of the source's own removals earlier in this
++            // same transaction were filtered out by conflict resolution, so the target's list
++            // never shrank the way the source's did, shifting every later index. Removing by
++            // identity (resolved from the removed element's own UUID) avoids that entirely;
++            // the recorded index is used only as a last-resort fallback.
++            org.eclipse.emf.ecore.EReference ref = rr.getAffectedFeature();
++            HierarchicalId removedId = rr.getOldValue();
++            EObject container = resolveElement(remapCacheId(rr.getAffectedElement(), cacheIdRemap), idResolver, hidFallback);
++            if (container == null) {
+                 LOGGER.debug("RemoveEReference: container not resolvable (may be deleted): {}",
+                         rr.getAffectedElement());
++                return;
++            }
++            var list = (List<EObject>) container.eGet(ref);
++
++            EObject removed = null;
++            if (removedId != null && !"unknown".equals(removedId.getId())) {
++                removed = resolveElement(remapCacheId(removedId, cacheIdRemap), idResolver, hidFallback);
++            }
++            if (removed == null && ref.isContainment()) {
++                // Removed element's UUID could not be recorded (it was already deleted at
++                // capture time): pair with a matching element this same transaction deletes
++                // from the same container/feature.
++                for (EObject c : deleteCandidates) {
++                    if (c.eContainer() == container && c.eContainmentFeature() == ref) {
++                        removed = c;
++                        break;
++                    }
++                }
++                if (removed != null) deleteCandidates.remove(removed);
++            }
++
++            if (removed != null) {
++                list.remove(removed);
++            } else if (removedId == null || "unknown".equals(removedId.getId())) {
++                MergeTracer.trace("           [REPLAY] skip index-based removal from '" + ref.getName()
++                        + "' (removed element unknown and no matching deleted element on target)");
++            } else if (rr.getIndex() >= 0 && rr.getIndex() < list.size()) {
++                // Fallback: the removed element's UUID is known but not resolvable on the target
++                // (e.g. a non-containment reference to an element outside this VSUM); use the
++                // recorded position as a best effort.
++                list.remove(rr.getIndex());
+             }
+ 
+         } else if (eChange instanceof tools.vitruv.change.atomic.eobject.DeleteEObject<HierarchicalId> de) {
+             EObject element = resolveElement(remapCacheId(de.getAffectedElement(), cacheIdRemap), idResolver, hidFallback);
+-            if (element != null) {
++            if (element != null && element.eResource() == null) {
++                // Already detached together with a removed ancestor; nothing left to delete.
++                LOGGER.debug("DeleteEObject: element already detached: {}", de.getAffectedElement());
++            } else if (element != null) {
+                 EcoreUtil.remove(element);
+             } else {
+                 LOGGER.debug("DeleteEObject: element not resolvable (already removed): {}",

@@ -1,0 +1,69 @@
+import java.util.Arrays;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+
+import "http://vitruv.tools/methodologisttemplate/sysml" as sysml
+import "http://vitruv.tools/cad/model" as cad
+
+reactions: blocks2Namespaces
+in reaction to changes in sysml
+execute actions in cad
+
+// Insert a SysML block into a SysML package.
+// As reaction, create a CAD namespace and insert it into the CAD model.
+reaction BlockInsertedIntoPackage {
+    after element sysml::Block inserted in sysml::Package[ownedElements]
+    call createAndInsertNamespace(affectedEObject, newValue)
+}
+
+routine createAndInsertNamespace(sysml::Package sysmlPackage, sysml::Block block) {
+    match {
+        require absence of cad::Namespace corresponding to block
+
+        val cadModel = retrieve cad::CAD_Model corresponding to sysmlPackage
+    }
+    create {
+        val namespace = new cad::Namespace
+    }
+    update {
+        namespace.name = block.name
+        namespace.id = block.id + "_reaction"
+
+        cadModel.namespaces.add(namespace)
+
+        addCorrespondenceBetween(block, namespace)
+    }
+}
+
+// Delete a SysML block from the model instance.
+// As reaction, ask the user whether to delete the corresponding CAD namespaces.
+reaction BlockDeletedFromPackage {
+    after element sysml::Block deleted
+    call deleteNamespace(affectedEObject)
+}
+
+routine deleteNamespace(sysml::Block block) {
+    match {
+        val namespaces = retrieve many cad::Namespace corresponding to block
+    }
+    update {
+        val deleteNamespaces = userInteractor.singleSelectionDialogBuilder
+            .message("Delete all corresponding CAD namespaces?")
+            .choices(Arrays.asList("Yes", "No"))
+            .startInteraction
+            
+        for (namespace : namespaces) {
+            removeCorrespondenceBetween(namespace, block)
+            
+            if (deleteNamespaces == 0) {
+                // Clean up cross-references to avoid model saving errors due to elements not being contained in a resource
+                val r = block.eResource
+                if (r !== null) {
+                    val rs = r.resourceSet
+                    if (rs !== null) EcoreUtil.UsageCrossReferencer.find(block, rs).forEach[setting | EcoreUtil.remove(setting, block)]
+                }
+                
+                removeObject(namespace)
+            }
+        }
+    }
+}

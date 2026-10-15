@@ -1,0 +1,95 @@
+import java.util.Arrays;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+
+import "http://vitruv.tools/cad/model" as cad
+import "http://vitruv.tools/methodologisttemplate/sysml" as sysml
+
+reactions: namespaces2Blocks
+in reaction to changes in cad
+execute actions in sysml
+
+// Insert a CAD namespace into a CAD model.
+// As reaction, ask the user if they want to create a SysML block and if so, insert it into the corresponding SysML package.
+reaction NamespaceInsertedIntoModel {
+    after element cad::Namespace inserted in cad::CAD_Model[namespaces]
+    call createAndInsertBlock(affectedEObject, newValue)
+}
+
+routine createAndInsertBlock(cad::CAD_Model cadModel, cad::Namespace namespace) {
+    match {
+        require absence of sysml::Block corresponding to namespace
+        val sysmlModel = retrieve sysml::Model corresponding to cadModel
+        val sysmlPackages = retrieve many sysml::Package corresponding to cadModel
+    }
+    create {
+        val block = new sysml::Block
+    }
+    update {
+        val correspondWithBlock = userInteractor.textInputDialogBuilder
+            .message("Add correspondence to existing SysML block? (Enter SysML block ID)")
+            .startInteraction
+        
+        if (correspondWithBlock !== "") {
+            // Add correspondence to block
+            for (sysmlPackage : sysmlPackages) {
+                for (e : sysmlPackage.ownedElements) {
+                    if (e.id == correspondWithBlock) {
+                        addCorrespondenceBetween(e, namespace)
+                    }
+                }
+            }
+
+            removeObject(block)
+        } else {
+            // Ask for block creation
+            val createBlock = userInteractor.singleSelectionDialogBuilder
+                .message("Create a corresponding SysML block?")
+                .choices(Arrays.asList("Yes", "No"))
+                .startInteraction
+
+            if (createBlock == 0) {
+                block.name = namespace.name
+                block.id = namespace.id + "_reaction"
+
+                // Insert block deterministically and only once in the model root owned elements
+                sysmlModel.ownedElements.add(block)
+
+                addCorrespondenceBetween(namespace, block)
+            } else {
+                removeObject(block)
+            }
+        }
+    }
+}
+
+// Delete a CAD namespace from the model instance.
+// As reaction, ask the user whether to delete the corresponding SysML block.
+reaction NamespaceDeletedFromModel {
+    after element cad::Namespace deleted
+    call deleteBlock(affectedEObject)
+}
+
+routine deleteBlock(cad::Namespace namespace) {
+    match {
+        val block = retrieve sysml::Block corresponding to namespace
+    }
+    update {
+        val deleteBlock = userInteractor.singleSelectionDialogBuilder
+            .message("Delete the corresponding SysML block?")
+            .choices(Arrays.asList("Yes", "No"))
+            .startInteraction
+
+        removeCorrespondenceBetween(block, namespace)
+        
+        if (deleteBlock == 0 || correspondenceModel.getCorrespondingEObjects(block).isEmpty) {
+            // Clean up cross-references to avoid model saving errors due to elements not being contained in a resource
+            val r = block.eResource
+            if (r !== null) {
+                val rs = r.resourceSet
+                if (rs !== null) EcoreUtil.UsageCrossReferencer.find(block, rs).forEach[setting | EcoreUtil.remove(setting, block)]
+            }
+
+            removeObject(block)
+        }
+    }
+}

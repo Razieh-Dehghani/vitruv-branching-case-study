@@ -1,0 +1,326 @@
+# fix(Vitruv): commit fast forward metadata changes + fix attribute insertion order
+diff --git a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/MergeManager.java b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/MergeManager.java
+index 045fb82..58ae066 100644
+--- a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/MergeManager.java
++++ b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/MergeManager.java
+@@ -277,6 +277,14 @@ public class MergeManager {
+             // HierarchicalId. Only needed when no postMergeHandler already does this.
+             PostMergeHandler.copyVsumFromSourceBranch(repoRoot, sourceBranch, targetBranch);
+           }
++          // The copy above only touches the working tree. Left uncommitted, it is wiped out
++          // by the very next BranchManager#switchBranch's hard-reset (which intentionally
++          // discards uncommitted VSUM-internal writes) -- so the target branch's metadata
++          // silently reverts to whatever its own last commit had (e.g. the branch's initial,
++          // pre-scenario snapshot), even though the working tree looked correct right after
++          // this merge. Commit it, like markAsMerged/copyChangelogsFromSourceToTarget do for
++          // their own working-tree writes.
++          commitVsumMetadataCopy(git, targetBranch);
+           postMergeReload.run();
+           if (deleteAfterMerge) {
+             deleteSourceBranch(git, sourceBranch);
+@@ -545,6 +553,54 @@ public class MergeManager {
+     }
+   }
+ 
++  /**
++   * Stages and commits {@code .vitruvius/vsum/<targetBranch>/}, whose content
++   * {@link PostMergeHandler#copyVsumFromSourceBranch} (or a caller-supplied equivalent) just
++   * wrote into the working tree after a fast-forward.
++   *
++   * <p>That copy is a plain filesystem write, not a Git operation: left uncommitted, it is
++   * indistinguishable from the "VSUM-internal writes that accumulate in the working tree after
++   * each commit" that {@link BranchManager#switchBranch} intentionally wipes with a hard-reset
++   * before its next checkout. Without committing here, the very next branch switch would
++   * silently revert the target branch's metadata to whatever its own last commit had -- which,
++   * for a branch like {@code main} that mostly receives fast-forwards rather than being
++   * actively committed to, can be far out of date (e.g. its state from before any of the
++   * fast-forwarded branch's changes existed) even though the working tree looked correct
++   * immediately after this merge.
++   *
++   * <p>Non-fatal if the directory does not exist or the commit fails: worst case, the copy is
++   * lost to the next switch exactly as it would have been without this method, which matches
++   * this merge's pre-fix behaviour rather than regressing it.
++   *
++   * @param git          the open Git instance for the current repository.
++   * @param targetBranch the branch whose VSUM metadata directory was just overwritten.
++   */
++  private void commitVsumMetadataCopy(Git git, String targetBranch) {
++    Path vsumDir = repoRoot.resolve(".vitruvius/vsum").resolve(targetBranch);
++    if (!Files.isDirectory(vsumDir)) {
++      return;
++    }
++    try {
++      String relativePath = repoRoot.relativize(vsumDir).toString().replace('\\', '/');
++      git.add().addFilepattern(relativePath).call();
++      // Nothing to commit if the copied content is byte-identical to what was already tracked
++      // (e.g. a fast-forward onto a branch whose own VSUM metadata never diverged from
++      // targetBranch's). git commit would otherwise fail with "nothing to commit".
++      if (git.status().call().isClean()) {
++        return;
++      }
++      git.commit()
++          .setMessage("[vitruvius] Sync VSUM metadata for '" + targetBranch + "' after fast-forward"
++              + "\n\nVitruvius-System: true")
++          .setNoVerify(true)
++          .call();
++      LOGGER.info("Committed VSUM metadata sync for branch '{}'", targetBranch);
++    } catch (org.eclipse.jgit.api.errors.GitAPIException e) {
++      LOGGER.warn("Failed to commit VSUM metadata sync for '{}' (non-critical): {}",
++          targetBranch, e.getMessage());
++    }
++  }
++
+   /**
+    * Copies changelog JSON files from the source branch's git tree into the target branch's
+    * changelog directory on disk and commits them. This makes the merged branch's history
+@@ -771,7 +827,6 @@ public class MergeManager {
+         copiedFiles = copyMergedModelFiles(mergedFolder, repoRoot);
+         copyMergedVsumMetadata(mergedFolder, repoRoot);
+       }
+-
+       PersonIdent ident = new PersonIdent("Vitruvius", "vitruvius@system");
+       if (copiedFiles.isEmpty()) {
+         git.add().addFilepattern(".").call();
+diff --git a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/SemanticConflictDetector.java b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/SemanticConflictDetector.java
+index d21bbf7..edcf88c 100644
+--- a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/SemanticConflictDetector.java
++++ b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/SemanticConflictDetector.java
+@@ -237,7 +237,7 @@ public class SemanticConflictDetector {
+         mergeEngine.setSkipDirectConflictDetection(true); // steps 1-4 already ran
+         try {
+           SemanticMergeResult engineResult =
+-              mergeEngine.mergeBidirectional(ancestorSha, fullShaA, fullShaB);
++              mergeEngine.mergeBidirectional(ancestorSha, fullShaA, branchA, fullShaB, branchB);
+           LOGGER.info("Merge engine result: {}", engineResult);
+           return convertEngineResult(
+               engineResult, ancestorSha, shortShasA, shortShasB, changesA, changesB);
+diff --git a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/ChangeDtoDeserializer.java b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/ChangeDtoDeserializer.java
+index 40ad8f6..baab311 100644
+--- a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/ChangeDtoDeserializer.java
++++ b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/ChangeDtoDeserializer.java
+@@ -79,6 +79,71 @@ public class ChangeDtoDeserializer {
+         return changes;
+     }
+ 
++    /**
++     * Moves each newly created element's containment-insert DTO to directly follow its
++     * {@code CreateEObject} DTO.
++     *
++     * <p>A transaction may configure a new element (set attributes, wire up cross-references)
++     * before inserting it into its container -- e.g. {@code node.setId(...); ...;
++     * activity.getNodes().add(node)}. The recorded change order preserves that: create, then
++     * attribute/reference changes on the still-uncontained element, then the containment
++     * insert. Replaying changes in that exact order onto a {@code ChangeRecordingView} is a
++     * problem: the view's change recorder only observes EMF notifications on objects already
++     * part of a tracked resource. Attribute changes applied to the element before it is
++     * inserted happen on an object the recorder isn't watching yet, so they never make it into
++     * the {@code VitruviusChange} that {@code commitChanges()} applies to the real V-SUM --
++     * the element ends up correctly contained, but with those attributes unset (e.g. a
++     * {@code null} id). Moving the containment insert to immediately follow the create closes
++     * that window: by the time any attribute/reference change on the element replays, it is
++     * already part of the tracked resource.
++     *
++     * <p>This operates on the {@link SemanticChangeLog.ChangeDto} list -- not on the
++     * deserialized {@code EChange} list inside {@link #deserializeAll} -- because callers
++     * derive other per-change data directly from the DTO list by index (e.g. a parallel
++     * "affected UUID per change" list). Reordering only after deserialization would desync
++     * such derived lists from the {@code EChange} list; reordering the DTOs first keeps every
++     * index-parallel derivation consistent since they all end up built from the same order.
++     * Callers must call this before deriving anything else from the transaction's DTO list.
++     */
++    public static List<SemanticChangeLog.ChangeDto> reorderContainmentInsertsAfterCreate(
++            List<SemanticChangeLog.ChangeDto> dtos) {
++        java.util.Map<String, Integer> insertIndexByUuid = new java.util.HashMap<>();
++        for (int i = 0; i < dtos.size(); i++) {
++            SemanticChangeLog.ChangeDto dto = dtos.get(i);
++            boolean isContainmentInsert = false;
++            if ("InsertRootEObject".equals(dto.changeType)) {
++                isContainmentInsert = true;
++            } else if ("InsertEReference".equals(dto.changeType)) {
++                try {
++                    isContainmentInsert = resolveReference(dto.affectedEClassName, dto.featureName).isContainment();
++                } catch (Exception e) {
++                    isContainmentInsert = false;
++                }
++            }
++            if (isContainmentInsert && dto.newValueId != null) {
++                insertIndexByUuid.putIfAbsent(dto.newValueId, i);
++            }
++        }
++        if (insertIndexByUuid.isEmpty()) {
++            return dtos;
++        }
++        List<SemanticChangeLog.ChangeDto> result = new ArrayList<>(dtos.size());
++        java.util.Set<Integer> consumed = new java.util.HashSet<>();
++        for (int i = 0; i < dtos.size(); i++) {
++            if (consumed.contains(i)) continue;
++            SemanticChangeLog.ChangeDto dto = dtos.get(i);
++            result.add(dto);
++            if ("CreateEObject".equals(dto.changeType) && dto.affectedElementUuid != null) {
++                Integer insertIdx = insertIndexByUuid.get(dto.affectedElementUuid);
++                if (insertIdx != null && insertIdx > i && !consumed.contains(insertIdx)) {
++                    result.add(dtos.get(insertIdx));
++                    consumed.add(insertIdx);
++                }
++            }
++        }
++        return result;
++    }
++
+     @SuppressWarnings("unchecked")
+     public EChange<HierarchicalId> deserialize(SemanticChangeLog.ChangeDto dto) {
+         return switch (dto.changeType) {
+@@ -260,7 +325,7 @@ public class ChangeDtoDeserializer {
+         return uri;
+     }
+ 
+-    private EClass resolveEClass(String className) {
++    private static EClass resolveEClass(String className) {
+         if (className == null) {
+             throw new IllegalArgumentException("Cannot resolve null class name");
+         }
+@@ -285,14 +350,14 @@ public class ChangeDtoDeserializer {
+         throw new IllegalStateException("EClass not found in EPackage registry: " + className);
+     }
+ 
+-    private EAttribute resolveAttribute(String className, String featureName) {
++    private static EAttribute resolveAttribute(String className, String featureName) {
+         EClass eClass = resolveEClass(className);
+         EStructuralFeature feature = eClass.getEStructuralFeature(featureName);
+         if (feature instanceof EAttribute attr) return attr;
+         throw new IllegalStateException("EAttribute '%s' not found on %s".formatted(featureName, className));
+     }
+ 
+-    private EReference resolveReference(String className, String featureName) {
++    private static EReference resolveReference(String className, String featureName) {
+         EClass eClass = resolveEClass(className);
+         EStructuralFeature feature = eClass.getEStructuralFeature(featureName);
+         if (feature instanceof EReference ref) return ref;
+diff --git a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/GitStateLoader.java b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/GitStateLoader.java
+index 0e104ef..0fbc430 100644
+--- a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/GitStateLoader.java
++++ b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/GitStateLoader.java
+@@ -146,6 +146,14 @@ public class GitStateLoader {
+ 
+         String matchedBranch = null;
+         String fallbackBranch = null;
++        // Already-merged feature branches never get their .vitruvius/vsum/<branch>/ dir
++        // pruned, so a single checked-out commit can contain several such dirs at once, each
++        // possibly at a different state. Without an expectedBranch (e.g. loading the base VSUM
++        // for a bidirectional pre-check), Files.list()'s unspecified ordering could pick any of
++        // them -- prefer "main" deterministically: it's conceptually the state before any
++        // feature branch diverged, so it's the right fallback whenever the caller doesn't know
++        // which branch it actually wants.
++        String preferredFallback = null;
+         List<Path> branchDirList = new java.util.ArrayList<>();
+         try (var stream = Files.list(vitruviusVsumDir)) {
+             stream.filter(Files::isDirectory).forEach(branchDirList::add);
+@@ -159,11 +167,15 @@ public class GitStateLoader {
+             if (expectedBranch != null && expectedBranch.equals(branchName)) {
+                 matchedBranch = branchName;
+             }
++            if ("main".equals(branchName)) {
++                preferredFallback = branchName;
++            }
+             if (fallbackBranch == null) {
+                 fallbackBranch = branchName;
+             }
+         }
+-        String chosen = matchedBranch != null ? matchedBranch : fallbackBranch;
++        String chosen = matchedBranch != null ? matchedBranch
++                : preferredFallback != null ? preferredFallback : fallbackBranch;
+         if (expectedBranch != null && matchedBranch == null) {
+             LOGGER.warn("Expected VSUM branch dir '{}' not found among {} - falling back to '{}'", expectedBranch, branchDirList, chosen);
+         }
+diff --git a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/SemanticMergeCommand.java b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/SemanticMergeCommand.java
+index bb3f12c..5771eb4 100644
+--- a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/SemanticMergeCommand.java
++++ b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/SemanticMergeCommand.java
+@@ -98,7 +98,7 @@ public class SemanticMergeCommand {
+ 
+         SemanticMergeEngine engine = new SemanticMergeEngine(
+                 repoRoot, specs, interactionProvider, conflictResolutionProvider);
+-        SemanticMergeResult result = engine.mergeBidirectional(baseSha, branchASha, branchBSha);
++        SemanticMergeResult result = engine.mergeBidirectional(baseSha, branchASha, branchA, branchBSha, branchB);
+ 
+         LOGGER.info("Bidirectional merge result: {}", result);
+         return result;
+diff --git a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/SemanticMergeEngine.java b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/SemanticMergeEngine.java
+index f61f7f8..6453ba9 100644
+--- a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/SemanticMergeEngine.java
++++ b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/SemanticMergeEngine.java
+@@ -133,6 +133,26 @@ public class SemanticMergeEngine {
+      */
+     public SemanticMergeResult mergeBidirectional(String baseSha, String branchASha, String branchBSha)
+             throws IOException, GitAPIException {
++        return mergeBidirectional(baseSha, branchASha, null, branchBSha, null);
++    }
++
++    /**
++     * Same as {@link #mergeBidirectional(String, String, String)}, but additionally threads
++     * the branch names through to every {@code merge(...)} call this makes (forward and
++     * reverse), instead of leaving {@code targetBranch}/{@code sourceBranch} as {@code null}.
++     *
++     * <p>Without the names, loading a VSUM whose directory contains more than one
++     * {@code .vitruvius/vsum/<branch>/} subdirectory (e.g. an already-merged feature branch
++     * whose directory was never pruned) falls back to an unspecified choice among them --
++     * usually harmless, but wrong whenever the fallback and the actually-needed branch have
++     * diverged, silently loading the wrong element positions and producing an unrelated
++     * "no EObject could be found for ID" failure instead of the expected result.
++     *
++     * @param branchAName name of branch A, or {@code null} if unknown.
++     * @param branchBName name of branch B, or {@code null} if unknown.
++     */
++    public SemanticMergeResult mergeBidirectional(String baseSha, String branchASha, String branchAName,
++            String branchBSha, String branchBName) throws IOException, GitAPIException {
+ 
+         LOGGER.info("Bidirectional merge: base={}, A={}, B={}",
+                 baseSha.substring(0, 7), branchASha.substring(0, 7), branchBSha.substring(0, 7));
+@@ -145,7 +165,7 @@ public class SemanticMergeEngine {
+ 
+         // 1. Try forward: replay A onto B (ours=B, theirs=A)
+         MergeTracer.trace("[BIDIR] Step 1: Attempting forward merge (A→B)...");
+-        SemanticMergeResult forwardResult = merge(baseSha, branchBSha, branchASha);
++        SemanticMergeResult forwardResult = merge(baseSha, branchBSha, branchASha, branchBName, branchAName);
+ 
+         // 2. If direct conflicts with no resolver, return immediately
+         if (!forwardResult.isSuccess()) {
+@@ -176,7 +196,8 @@ public class SemanticMergeEngine {
+         SemanticMergeEngine reverseEngine = new SemanticMergeEngine(
+                 repoRoot, specs, interactionProvider,
+                 invertResolutionProvider(conflictResolutionProvider));
+-        SemanticMergeResult reverseResult = reverseEngine.merge(baseSha, branchASha, branchBSha);
++        SemanticMergeResult reverseResult = reverseEngine.merge(baseSha, branchASha, branchBSha,
++                branchAName, branchBName);
+ 
+         // 5. If reverse had direct conflicts (no resolver), return forward result as-is
+         //    (direct conflicts are symmetric, so this shouldn't happen if forward succeeded)
+@@ -617,6 +638,7 @@ public class SemanticMergeEngine {
+ 
+                 if (txnDtos.isEmpty()) continue;
+ 
++                txnDtos = ChangeDtoDeserializer.reorderContainmentInsertsAfterCreate(txnDtos);
+                 ChangeDtoDeserializer deserializer = new ChangeDtoDeserializer(null, uriPrefix);
+                 List<EChange<HierarchicalId>> txnChanges = deserializer.deserializeAll(txnDtos);
+                 if (txnChanges.isEmpty()) continue;
+@@ -888,6 +910,7 @@ public class SemanticMergeEngine {
+ 
+                 if (txnDtos.isEmpty()) continue;
+ 
++                txnDtos = ChangeDtoDeserializer.reorderContainmentInsertsAfterCreate(txnDtos);
+                 ChangeDtoDeserializer deserializer = new ChangeDtoDeserializer(null, uriPrefix);
+                 List<EChange<HierarchicalId>> txnChanges = deserializer.deserializeAll(txnDtos);
+                 if (txnChanges.isEmpty()) continue;
+@@ -1170,6 +1193,12 @@ public class SemanticMergeEngine {
+                     }
+                 }
+ 
++                // Reorder each newly created element's containment insert to directly follow
++                // its create, before deriving anything else index-parallel from txnDtos (the
++                // affectedUuids list just below): see reorderContainmentInsertsAfterCreate's
++                // javadoc for why the reorder must happen on the DTOs, not after deserializing.
++                txnDtos = ChangeDtoDeserializer.reorderContainmentInsertsAfterCreate(txnDtos);
++
+                 // Fresh deserializer per transaction (resets cache ID counter)
+                 ChangeDtoDeserializer deserializer =
+                         new ChangeDtoDeserializer(null, oursUriPrefix);

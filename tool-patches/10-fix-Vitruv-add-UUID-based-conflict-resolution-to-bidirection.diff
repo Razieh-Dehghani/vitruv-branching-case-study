@@ -1,0 +1,105 @@
+# fix(Vitruv): add UUID-based conflict resolution to bidirectional merges when a merge engine is set
+diff --git a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/MergeManager.java b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/MergeManager.java
+index 58ae066..245f0be 100644
+--- a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/MergeManager.java
++++ b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/MergeManager.java
+@@ -316,6 +316,27 @@ public class MergeManager {
+             git, sourceBranch, targetBranch, sourceRef, repo, deleteAfterMerge);
+       }
+ 
++      // The changelog-level pre-check (runSemanticPreCheck) delegates to
++      // SemanticMergeEngine#mergeBidirectional with direct UUID-based conflict detection
++      // switched off (SemanticConflictDetector already ran its own, separate step 1-4
++      // direct-conflict check beforehand and only delegates to the engine when that found
++      // nothing left unresolved). That separate check can legitimately find nothing while
++      // the engine's own UuidConflictDetector -- run for real inside SemanticMergeEngine#merge
++      // -- still would, e.g. deletions whose UUID could not be resolved at changelog-capture
++      // time, or delete/delete pairs step 1-4 treats as auto-resolvable but that the engine's
++      // replay still needs to route through per-element resolution rather than a whole-file
++      // strategy. Left unchecked, a provider set for exactly this retry falls through to the
++      // coarse JGit fallback below, whose OURS/THEIRS file selection is never reconciled with
++      // the merge-engine-authored VSUM metadata copied alongside it -- leaving the VSUM's UUID
++      // mapping inconsistent with the actual merged model content. Ask the engine directly
++      // before giving up on it.
++      if (conflictResolutionProvider != null && mergeEngine != null
++          && engineDetectsDirectConflicts(repo, sourceRef)) {
++        LOGGER.info("Engine detected direct conflicts missed by the pre-check -- resolving with engine");
++        return resolveWithEngine(
++            git, sourceBranch, targetBranch, sourceRef, repo, deleteAfterMerge);
++      }
++
+       // Fallback: provider set with no semantic conflicts (S2, state-based diff rename
+       // that bypasses the changelog-based pre-check) or no engine configured at all.
+       // The engine cannot handle renames not captured as EChanges; JGit file-level
+@@ -382,14 +403,55 @@ public class MergeManager {
+     }
+   }
+ 
++  /**
++   * Asks the merge engine whether its UUID-based direct conflict detection
++   * ({@link SemanticMergeEngine#hasDirectConflicts}) finds conflicts between HEAD (ours) and
++   * the source branch (theirs), independently of what {@link #runSemanticPreCheck} found.
++   * Returns {@code false} if the check cannot be performed.
++   */
++  private boolean engineDetectsDirectConflicts(Repository repo, Ref sourceRef) {
++    try (RevWalk walk = new RevWalk(repo)) {
++      RevCommit oursCommit = walk.parseCommit(repo.resolve("HEAD"));
++      RevCommit theirsCommit = walk.parseCommit(sourceRef.getObjectId());
++      walk.setRevFilter(RevFilter.MERGE_BASE);
++      walk.markStart(oursCommit);
++      walk.markStart(theirsCommit);
++      RevCommit base = walk.next();
++      if (base == null) {
++        return false;
++      }
++      return mergeEngine.hasDirectConflicts(
++          base.getName(), oursCommit.getName(), theirsCommit.getName());
++    } catch (IOException | GitAPIException | RuntimeException e) {
++      LOGGER.warn("Engine direct conflict check failed: {}", e.getMessage());
++      return false;
++    }
++  }
++
+   /**
+    * Runs the semantic conflict pre-check for the proposed merge.
+    *
+-   * <p>Creates a lightweight {@link SemanticConflictDetector} (steps 1–3 only) and
+-   * compares the semantic changelogs of both branches. Returns a list of conflict
+-   * descriptors in the form {@code "semantic://elementUuid/feature"} for each detected
+-   * direct conflict. Returns an empty list if no conflicts are found or if the check
+-   * cannot be performed (e.g. no changelogs exist yet).
++   * <p>Creates a lightweight {@link SemanticConflictDetector} and compares the semantic
++   * changelogs of both branches. Returns a list of conflict descriptors in the form
++   * {@code "semantic://elementUuid/feature"} for each detected conflict. Returns an empty
++   * list if no conflicts are found or if the check cannot be performed (e.g. no changelogs
++   * exist yet).
++   *
++   * <p>When {@link #mergeEngine} is set, {@link SemanticConflictDetector#analyzeBranches}
++   * delegates steps 5-9 to {@link SemanticMergeEngine#mergeBidirectional}, which resolves
++   * (not just detects) conflicts when the engine carries a {@link ConflictResolutionProvider}.
++   * A provider set on {@link #mergeEngine} for a caller-driven retry (e.g. after this method
++   * already reported conflicts once with no provider, prompting the caller to supply one via
++   * {@link #setConflictResolutionProvider}) would then make this "detection" pass silently
++   * auto-resolve and report zero conflicts -- collapsing {@code !semanticConflicts.isEmpty()}
++   * to {@code false} and routing the merge into the coarse whole-file JGit fallback below
++   * instead of {@link #resolveWithEngine}, even though the engine's own resolved replay
++   * result (with correctly-derived elements and VSUM metadata) is discarded right after.
++   * The whole-file fallback then combines JGit's OURS/THEIRS file selection with a metadata
++   * copy that was never reconciled with it, leaving the VSUM's UUID mapping inconsistent
++   * with the actual merged model content. Always detect with a resolution-provider-free
++   * copy of the engine so this method's result depends only on whether conflicts exist, not
++   * on whatever provider the caller currently has wired in for a later resolution attempt.
+    *
+    * @param sourceBranch the branch being merged in.
+    * @param targetBranch the branch receiving the merge.
+@@ -397,7 +459,9 @@ public class MergeManager {
+    */
+   private List<String> runSemanticPreCheck(String sourceBranch, String targetBranch) {
+     try {
+-      SemanticConflictDetector detector = new SemanticConflictDetector(repoRoot, mergeEngine);
++      SemanticMergeEngine detectionEngine =
++          mergeEngine != null ? mergeEngine.withConflictResolutionProvider(null) : null;
++      SemanticConflictDetector detector = new SemanticConflictDetector(repoRoot, detectionEngine);
+       ReplayResult analysis = detector.analyzeBranches(targetBranch, sourceBranch);
+       if (!analysis.hasConflicts()) {
+         return List.of();

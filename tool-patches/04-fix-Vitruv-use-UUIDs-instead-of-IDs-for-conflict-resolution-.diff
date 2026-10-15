@@ -1,0 +1,23 @@
+# fix(Vitruv): use UUIDs instead of IDs for conflict resolution provider choose methods
+diff --git a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/ConflictResolutionProvider.java b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/ConflictResolutionProvider.java
+index 05d733e..35f2a5c 100644
+--- a/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/ConflictResolutionProvider.java
++++ b/Vitruv-Branching-Tool/Vitruv/vsum/src/main/java/tools/vitruv/framework/vsum/branch/merge/ConflictResolutionProvider.java
+@@ -33,7 +33,7 @@ public interface ConflictResolutionProvider {
+      */
+     static ConflictResolutionProvider chooseAllOurs() {
+         return conflicts -> conflicts.stream()
+-                .map(c -> new ConflictResolution(c.getElementId(),
++                .map(c -> new ConflictResolution(c.getElementUuid(),
+                         ConflictResolution.Choice.OURS))
+                 .toList();
+     }
+@@ -43,7 +43,7 @@ public interface ConflictResolutionProvider {
+      */
+     static ConflictResolutionProvider chooseAllTheirs() {
+         return conflicts -> conflicts.stream()
+-                .map(c -> new ConflictResolution(c.getElementId(),
++                .map(c -> new ConflictResolution(c.getElementUuid(),
+                         ConflictResolution.Choice.THEIRS))
+                 .toList();
+     }

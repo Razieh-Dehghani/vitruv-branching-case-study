@@ -1,0 +1,2234 @@
+[
+    {
+        "name": "_P0001_ASM",
+        "label": "P0001_ASM",
+        "path": "/P0001_ASM",
+        "volume": 2563730.228,
+        "surfaceArea": 202090.295,
+        "size": {
+            "x": 72.314,
+            "y": 247.708,
+            "z": 277.433
+        }
+    },
+    {
+        "name": "_P0001_SKEL",
+        "label": "P0001_SKEL",
+        "path": "/P0001_ASM/P0001_SKEL",
+        "volume": 5726178.087,
+        "surfaceArea": 377497.193,
+        "size": {
+            "x": 335.613,
+            "y": 388.304,
+            "z": 153.564
+        }
+    },
+    {
+        "name": "COMPOUND",
+        "label": "COMPOUND004",
+        "path": "/P0001_ASM/P0001_SKEL/COMPOUND004",
+        "volume": 4772768.667,
+        "surfaceArea": 395049.212,
+        "size": {
+            "x": 169.65,
+            "y": 363.962,
+            "z": 352.271
+        }
+    },
+    {
+        "name": "Part__Feature",
+        "label": "COMPOUND",
+        "path": "/P0001_ASM/P0001_SKEL/COMPOUND004/COMPOUND",
+        "volume": 398371.094,
+        "surfaceArea": 191498.947,
+        "size": {
+            "x": 23.021,
+            "y": 446.933,
+            "z": 255.097
+        }
+    },
+    {
+        "name": "Part__Feature001",
+        "label": "COMPOUND001",
+        "path": "/P0001_ASM/P0001_SKEL/COMPOUND004/COMPOUND001",
+        "volume": 10992648.361,
+        "surfaceArea": 233438.111,
+        "size": {
+            "x": 117.876,
+            "y": 410.125,
+            "z": 475.886
+        }
+    },
+    {
+        "name": "Part__Feature002",
+        "label": "COMPOUND002",
+        "path": "/P0001_ASM/P0001_SKEL/COMPOUND004/COMPOUND002",
+        "volume": 2665289.487,
+        "surfaceArea": 200606.138,
+        "size": {
+            "x": 329.856,
+            "y": 482.167,
+            "z": 125.293
+        }
+    },
+    {
+        "name": "Part__Feature003",
+        "label": "COMPOUND003",
+        "path": "/P0001_ASM/P0001_SKEL/COMPOUND004/COMPOUND003",
+        "volume": 31941480.119,
+        "surfaceArea": 345744.792,
+        "size": {
+            "x": 482.447,
+            "y": 415.297,
+            "z": 275.71
+        }
+    },
+    {
+        "name": "_P0002_ASM",
+        "label": "P0002_ASM",
+        "path": "/P0001_ASM/P0002_ASM",
+        "volume": 1149643.789,
+        "surfaceArea": 110780.227,
+        "size": {
+            "x": 122.332,
+            "y": 364.256,
+            "z": 114.858
+        }
+    },
+    {
+        "name": "_P0003_ASM",
+        "label": "P0003_ASM",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM",
+        "volume": 2761142.179,
+        "surfaceArea": 227290.861,
+        "size": {
+            "x": 487.159,
+            "y": 166.613,
+            "z": 135.53
+        }
+    },
+    {
+        "name": "_P0004",
+        "label": "P0004",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0004",
+        "volume": 7314350.504,
+        "surfaceArea": 498086.641,
+        "size": {
+            "x": 310.426,
+            "y": 380.364,
+            "z": 278.63
+        }
+    },
+    {
+        "name": "Part__Feature111",
+        "label": "SOLID",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0004/SOLID",
+        "volume": 7173136.471,
+        "surfaceArea": 240053.454,
+        "size": {
+            "x": 301.024,
+            "y": 292.438,
+            "z": 207.509
+        }
+    },
+    {
+        "name": "Part__Feature126",
+        "label": "P0005",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0005",
+        "volume": 35948319.021,
+        "surfaceArea": 836530.224,
+        "size": {
+            "x": 478.49,
+            "y": 459.675,
+            "z": 276.07
+        }
+    },
+    {
+        "name": "Part__Feature127",
+        "label": "P0006",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0006",
+        "volume": 2304877.75,
+        "surfaceArea": 343775.026,
+        "size": {
+            "x": 313.394,
+            "y": 314.289,
+            "z": 409.37
+        }
+    },
+    {
+        "name": "Part__Feature128",
+        "label": "P0007",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0007",
+        "volume": 295477.101,
+        "surfaceArea": 28918.531,
+        "size": {
+            "x": 29.317,
+            "y": 364.421,
+            "z": 54.871
+        }
+    },
+    {
+        "name": "Part__Feature129",
+        "label": "P0008",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0008",
+        "volume": 1522806.237,
+        "surfaceArea": 152494.151,
+        "size": {
+            "x": 247.176,
+            "y": 295.904,
+            "z": 34.996
+        }
+    },
+    {
+        "name": "Part__Feature130",
+        "label": "P0009",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0009",
+        "volume": 207564.606,
+        "surfaceArea": 34259.417,
+        "size": {
+            "x": 27.071,
+            "y": 485.138,
+            "z": 36.842
+        }
+    },
+    {
+        "name": "Part__Feature131",
+        "label": "P0010",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0010",
+        "volume": 1375853.039,
+        "surfaceArea": 236620.026,
+        "size": {
+            "x": 368.047,
+            "y": 230.227,
+            "z": 112.898
+        }
+    },
+    {
+        "name": "Part__Feature132",
+        "label": "P0011",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0011",
+        "volume": 1359637.989,
+        "surfaceArea": 148073.555,
+        "size": {
+            "x": 108.963,
+            "y": 345.117,
+            "z": 126.879
+        }
+    },
+    {
+        "name": "Part__Feature133",
+        "label": "P0012",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0012",
+        "volume": 2039122.501,
+        "surfaceArea": 128439.804,
+        "size": {
+            "x": 311.517,
+            "y": 55.826,
+            "z": 218.868
+        }
+    },
+    {
+        "name": "Part__Feature134",
+        "label": "P0013",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0013",
+        "volume": 1712018.261,
+        "surfaceArea": 376167.249,
+        "size": {
+            "x": 343.792,
+            "y": 147.666,
+            "z": 356.308
+        }
+    },
+    {
+        "name": "Part__Feature135",
+        "label": "P0014",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0014",
+        "volume": 8331320.506,
+        "surfaceArea": 310714.33,
+        "size": {
+            "x": 227.288,
+            "y": 462.528,
+            "z": 461.658
+        }
+    },
+    {
+        "name": "Part__Feature136",
+        "label": "P0015",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0015",
+        "volume": 13414355.788,
+        "surfaceArea": 376970.982,
+        "size": {
+            "x": 374.863,
+            "y": 482.868,
+            "z": 210.967
+        }
+    },
+    {
+        "name": "Part__Feature137",
+        "label": "P0016",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0016",
+        "volume": 1941979.612,
+        "surfaceArea": 312238.843,
+        "size": {
+            "x": 441.207,
+            "y": 62.942,
+            "z": 341.847
+        }
+    },
+    {
+        "name": "Part__Feature138",
+        "label": "P0017",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0017",
+        "volume": 375739.06,
+        "surfaceArea": 37411.282,
+        "size": {
+            "x": 230.426,
+            "y": 167.547,
+            "z": 35.512
+        }
+    },
+    {
+        "name": "Part__Feature139",
+        "label": "P0018",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0018",
+        "volume": 4738643.33,
+        "surfaceArea": 305050.566,
+        "size": {
+            "x": 264.551,
+            "y": 86.003,
+            "z": 389.444
+        }
+    },
+    {
+        "name": "Part__Feature140",
+        "label": "P0019",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0019",
+        "volume": 8695689.733,
+        "surfaceArea": 165755.409,
+        "size": {
+            "x": 205.494,
+            "y": 424.857,
+            "z": 296.148
+        }
+    },
+    {
+        "name": "Part__Feature141",
+        "label": "P0020",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0020",
+        "volume": 1515447.065,
+        "surfaceArea": 131874.459,
+        "size": {
+            "x": 21.358,
+            "y": 469.201,
+            "z": 312.263
+        }
+    },
+    {
+        "name": "Part__Feature142",
+        "label": "P0021",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0021",
+        "volume": 865788.734,
+        "surfaceArea": 125404.685,
+        "size": {
+            "x": 99.75,
+            "y": 480.991,
+            "z": 42.701
+        }
+    },
+    {
+        "name": "Part__Feature143",
+        "label": "P0022",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0022",
+        "volume": 8231181.086,
+        "surfaceArea": 517879.746,
+        "size": {
+            "x": 280.732,
+            "y": 299.07,
+            "z": 399.578
+        }
+    },
+    {
+        "name": "Part__Feature144",
+        "label": "P0023",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0023",
+        "volume": 7390200.149,
+        "surfaceArea": 161621.356,
+        "size": {
+            "x": 385.593,
+            "y": 364.305,
+            "z": 90.268
+        }
+    },
+    {
+        "name": "Part__Feature145",
+        "label": "P0024",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0024",
+        "volume": 5627545.975,
+        "surfaceArea": 212440.907,
+        "size": {
+            "x": 215.894,
+            "y": 150.856,
+            "z": 356.203
+        }
+    },
+    {
+        "name": "_P0025",
+        "label": "P0025",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0025",
+        "volume": 11740597.182,
+        "surfaceArea": 423864.935,
+        "size": {
+            "x": 155.986,
+            "y": 485.811,
+            "z": 427.964
+        }
+    },
+    {
+        "name": "Part__Feature146",
+        "label": "SOLID001",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0025/SOLID001",
+        "volume": 2418982.825,
+        "surfaceArea": 185351.191,
+        "size": {
+            "x": 289.086,
+            "y": 71.105,
+            "z": 251.074
+        }
+    },
+    {
+        "name": "Part__Feature149",
+        "label": "P0026",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0026",
+        "volume": 782420.201,
+        "surfaceArea": 51449.419,
+        "size": {
+            "x": 193.313,
+            "y": 95.672,
+            "z": 96.075
+        }
+    },
+    {
+        "name": "Part__Feature150",
+        "label": "P0027",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0027",
+        "volume": 1509119.451,
+        "surfaceArea": 146400.443,
+        "size": {
+            "x": 83.35,
+            "y": 144.349,
+            "z": 356.014
+        }
+    },
+    {
+        "name": "Part__Feature151",
+        "label": "P0028",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0028",
+        "volume": 1961483.112,
+        "surfaceArea": 92317.199,
+        "size": {
+            "x": 224.372,
+            "y": 61.699,
+            "z": 247.48
+        }
+    },
+    {
+        "name": "Part__Feature152",
+        "label": "P0029",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0029",
+        "volume": 2160489.951,
+        "surfaceArea": 218573.152,
+        "size": {
+            "x": 184.696,
+            "y": 159.22,
+            "z": 285.57
+        }
+    },
+    {
+        "name": "Part__Feature153",
+        "label": "P0030",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0030",
+        "volume": 22434906.081,
+        "surfaceArea": 266364.132,
+        "size": {
+            "x": 423.092,
+            "y": 384.282,
+            "z": 259.315
+        }
+    },
+    {
+        "name": "Part__Feature154",
+        "label": "P0031",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0031",
+        "volume": 9108.433,
+        "surfaceArea": 2963.668,
+        "size": {
+            "x": 48.421,
+            "y": 29.086,
+            "z": 10.957
+        }
+    },
+    {
+        "name": "Part__Feature155",
+        "label": "P0032",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0032",
+        "volume": 2096926.73,
+        "surfaceArea": 113005.545,
+        "size": {
+            "x": 487.547,
+            "y": 77.529,
+            "z": 98.714
+        }
+    },
+    {
+        "name": "Part__Feature156",
+        "label": "P0033",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0033",
+        "volume": 21345.937,
+        "surfaceArea": 12168.465,
+        "size": {
+            "x": 151.951,
+            "y": 15.086,
+            "z": 65.651
+        }
+    },
+    {
+        "name": "Part__Feature157",
+        "label": "P0034",
+        "path": "/P0001_ASM/P0002_ASM/P0003_ASM/P0034",
+        "volume": 4796442.534,
+        "surfaceArea": 364886.357,
+        "size": {
+            "x": 132.513,
+            "y": 401.647,
+            "z": 364.396
+        }
+    },
+    {
+        "name": "_P0035_ASM",
+        "label": "P0035_ASM",
+        "path": "/P0001_ASM/P0002_ASM/P0035_ASM",
+        "volume": 5818630.829,
+        "surfaceArea": 480763.207,
+        "size": {
+            "x": 82.988,
+            "y": 408.794,
+            "z": 430.868
+        }
+    },
+    {
+        "name": "Part__Feature158",
+        "label": "P0036",
+        "path": "/P0001_ASM/P0002_ASM/P0035_ASM/P0036",
+        "volume": 5268656.929,
+        "surfaceArea": 541989.766,
+        "size": {
+            "x": 426.391,
+            "y": 191.5,
+            "z": 339.35
+        }
+    },
+    {
+        "name": "_P0037_ASM",
+        "label": "P0037_ASM",
+        "path": "/P0001_ASM/P0037_ASM",
+        "volume": 6440169.64,
+        "surfaceArea": 356409.95,
+        "size": {
+            "x": 254.998,
+            "y": 116.687,
+            "z": 440.034
+        }
+    },
+    {
+        "name": "_P0038_ASM",
+        "label": "P0038_ASM",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM",
+        "volume": 341412.659,
+        "surfaceArea": 42623.582,
+        "size": {
+            "x": 71.544,
+            "y": 456.132,
+            "z": 30.945
+        }
+    },
+    {
+        "name": "_P0039_ASM",
+        "label": "P0039_ASM",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0039_ASM",
+        "volume": 1674729.958,
+        "surfaceArea": 215531.608,
+        "size": {
+            "x": 249.62,
+            "y": 450.901,
+            "z": 89.962
+        }
+    },
+    {
+        "name": "_P0040_ASM",
+        "label": "P0040_ASM",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0039_ASM/P0040_ASM",
+        "volume": 1743752.59,
+        "surfaceArea": 275071.293,
+        "size": {
+            "x": 294.213,
+            "y": 130.436,
+            "z": 468.605
+        }
+    },
+    {
+        "name": "Part__Feature159",
+        "label": "P0041",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0039_ASM/P0040_ASM/P0041",
+        "volume": 26042564.177,
+        "surfaceArea": 516424.205,
+        "size": {
+            "x": 234.003,
+            "y": 494.134,
+            "z": 444.02
+        }
+    },
+    {
+        "name": "_P0042",
+        "label": "P0042",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0039_ASM/P0040_ASM/P0042",
+        "volume": 549421.502,
+        "surfaceArea": 78226.694,
+        "size": {
+            "x": 57.196,
+            "y": 366.093,
+            "z": 60.921
+        }
+    },
+    {
+        "name": "Part__Feature160",
+        "label": "SOLID002",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0039_ASM/P0040_ASM/P0042/SOLID002",
+        "volume": 10552819.864,
+        "surfaceArea": 678163.62,
+        "size": {
+            "x": 342.018,
+            "y": 350.489,
+            "z": 321.12
+        }
+    },
+    {
+        "name": "_P0043_ASM",
+        "label": "P0043_ASM",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0039_ASM/P0040_ASM/P0043_ASM",
+        "volume": 15819706.309,
+        "surfaceArea": 334937.347,
+        "size": {
+            "x": 311.303,
+            "y": 317.98,
+            "z": 277.798
+        }
+    },
+    {
+        "name": "_P0044",
+        "label": "P0044",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0039_ASM/P0040_ASM/P0043_ASM/P0044",
+        "volume": 2745284.75,
+        "surfaceArea": 288376.618,
+        "size": {
+            "x": 440.113,
+            "y": 328.443,
+            "z": 72.219
+        }
+    },
+    {
+        "name": "Part__Feature162",
+        "label": "SOLID003",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0039_ASM/P0040_ASM/P0043_ASM/P0044/SOLID003",
+        "volume": 7099495.42,
+        "surfaceArea": 224518.028,
+        "size": {
+            "x": 357.531,
+            "y": 174.547,
+            "z": 268.785
+        }
+    },
+    {
+        "name": "Part__Feature166",
+        "label": "P0045",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0039_ASM/P0040_ASM/P0043_ASM/P0045",
+        "volume": 782796.471,
+        "surfaceArea": 40563.688,
+        "size": {
+            "x": 267.448,
+            "y": 61.789,
+            "z": 90.848
+        }
+    },
+    {
+        "name": "Part__Feature167",
+        "label": "P0046",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0039_ASM/P0040_ASM/P0043_ASM/P0046",
+        "volume": 3578393.268,
+        "surfaceArea": 216750.991,
+        "size": {
+            "x": 196.126,
+            "y": 222.346,
+            "z": 187.596
+        }
+    },
+    {
+        "name": "Part__Feature168",
+        "label": "P0047",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0039_ASM/P0040_ASM/P0043_ASM/P0047",
+        "volume": 468078.844,
+        "surfaceArea": 58947.415,
+        "size": {
+            "x": 67.524,
+            "y": 192.269,
+            "z": 170.569
+        }
+    },
+    {
+        "name": "Part__Feature169",
+        "label": "P0037",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0039_ASM/P0040_ASM/P0043_ASM/P0037",
+        "volume": 549977.014,
+        "surfaceArea": 36402.046,
+        "size": {
+            "x": 227.934,
+            "y": 149.061,
+            "z": 51.872
+        }
+    },
+    {
+        "name": "Part__Feature170",
+        "label": "P0048",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0039_ASM/P0040_ASM/P0043_ASM/P0048",
+        "volume": 13030193.383,
+        "surfaceArea": 615342.536,
+        "size": {
+            "x": 404.592,
+            "y": 467.398,
+            "z": 373.095
+        }
+    },
+    {
+        "name": "Part__Feature171",
+        "label": "P0038",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0039_ASM/P0040_ASM/P0043_ASM/P0038",
+        "volume": 2463741.374,
+        "surfaceArea": 284045.134,
+        "size": {
+            "x": 390.251,
+            "y": 122.802,
+            "z": 333.843
+        }
+    },
+    {
+        "name": "Part__Feature172",
+        "label": "P0049",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0039_ASM/P0040_ASM/P0043_ASM/P0049",
+        "volume": 13046364.837,
+        "surfaceArea": 212208.68,
+        "size": {
+            "x": 276.884,
+            "y": 349.914,
+            "z": 327.451
+        }
+    },
+    {
+        "name": "Part__Feature173",
+        "label": "P0040",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0039_ASM/P0040_ASM/P0043_ASM/P0040",
+        "volume": 232145.24,
+        "surfaceArea": 78477.156,
+        "size": {
+            "x": 113.408,
+            "y": 54.601,
+            "z": 280.762
+        }
+    },
+    {
+        "name": "Part__Feature174",
+        "label": "P0039",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0039_ASM/P0040_ASM/P0043_ASM/P0039",
+        "volume": 1815442.13,
+        "surfaceArea": 145776.267,
+        "size": {
+            "x": 94.935,
+            "y": 419.415,
+            "z": 111.315
+        }
+    },
+    {
+        "name": "Part__Feature175",
+        "label": "P0050",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0039_ASM/P0040_ASM/P0043_ASM/P0050",
+        "volume": 550673.796,
+        "surfaceArea": 99106.51,
+        "size": {
+            "x": 53.318,
+            "y": 210.997,
+            "z": 172.337
+        }
+    },
+    {
+        "name": "Part__Feature176",
+        "label": "P0051",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0051",
+        "volume": 837594.264,
+        "surfaceArea": 87395.03,
+        "size": {
+            "x": 457.462,
+            "y": 170.443,
+            "z": 39.309
+        }
+    },
+    {
+        "name": "Part__Feature177",
+        "label": "P0052",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0052",
+        "volume": 2292930.266,
+        "surfaceArea": 110180.037,
+        "size": {
+            "x": 348.121,
+            "y": 162.172,
+            "z": 113.371
+        }
+    },
+    {
+        "name": "Part__Feature178",
+        "label": "P0053",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0053",
+        "volume": 17474247.717,
+        "surfaceArea": 818840.121,
+        "size": {
+            "x": 428.782,
+            "y": 288.584,
+            "z": 491.519
+        }
+    },
+    {
+        "name": "Part__Feature179",
+        "label": "P0054",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0054",
+        "volume": 1815169.455,
+        "surfaceArea": 97263.251,
+        "size": {
+            "x": 177.005,
+            "y": 435.005,
+            "z": 99.939
+        }
+    },
+    {
+        "name": "Part__Feature180",
+        "label": "P0055",
+        "path": "/P0001_ASM/P0037_ASM/P0038_ASM/P0055",
+        "volume": 7778837.019,
+        "surfaceArea": 462334.975,
+        "size": {
+            "x": 167.351,
+            "y": 231.588,
+            "z": 482.761
+        }
+    },
+    {
+        "name": "_P0050_ASM",
+        "label": "P0050_ASM",
+        "path": "/P0001_ASM/P0037_ASM/P0050_ASM",
+        "volume": 368296.277,
+        "surfaceArea": 242239.672,
+        "size": {
+            "x": 398.357,
+            "y": 21.479,
+            "z": 270.396
+        }
+    },
+    {
+        "name": "Part__Feature181",
+        "label": "P0056",
+        "path": "/P0001_ASM/P0037_ASM/P0050_ASM/P0056",
+        "volume": 13187270.346,
+        "surfaceArea": 299355.532,
+        "size": {
+            "x": 341.633,
+            "y": 194.677,
+            "z": 496.036
+        }
+    },
+    {
+        "name": "_P0057_ASM",
+        "label": "P0057_ASM",
+        "path": "/P0001_ASM/P0057_ASM",
+        "volume": 1650996.779,
+        "surfaceArea": 219326.359,
+        "size": {
+            "x": 144.602,
+            "y": 218.581,
+            "z": 289.25
+        }
+    },
+    {
+        "name": "_P0003_MIR_ASM",
+        "label": "P0003_MIR_ASM",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM",
+        "volume": 1257518.835,
+        "surfaceArea": 165077.229,
+        "size": {
+            "x": 26.809,
+            "y": 234.851,
+            "z": 402.902
+        }
+    },
+    {
+        "name": "_P0004_MIR",
+        "label": "P0004_MIR",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0004_MIR",
+        "volume": 1477013.606,
+        "surfaceArea": 68461.334,
+        "size": {
+            "x": 84.259,
+            "y": 110.679,
+            "z": 386.076
+        }
+    },
+    {
+        "name": "Part__Feature182",
+        "label": "SOLID004",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0004_MIR/SOLID004",
+        "volume": 9419163.551,
+        "surfaceArea": 237859.644,
+        "size": {
+            "x": 283.531,
+            "y": 263.788,
+            "z": 215.068
+        }
+    },
+    {
+        "name": "Part__Feature197",
+        "label": "P0005_MIR",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0005_MIR",
+        "volume": 5886093.451,
+        "surfaceArea": 275565.339,
+        "size": {
+            "x": 106.408,
+            "y": 378.581,
+            "z": 307.887
+        }
+    },
+    {
+        "name": "Part__Feature198",
+        "label": "P0005_MIR001",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0005_MIR001",
+        "volume": 1475215.998,
+        "surfaceArea": 463006.849,
+        "size": {
+            "x": 280.176,
+            "y": 470.928,
+            "z": 188.246
+        }
+    },
+    {
+        "name": "Part__Feature199",
+        "label": "P0005_MIR002",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0005_MIR002",
+        "volume": 287047.231,
+        "surfaceArea": 167069.075,
+        "size": {
+            "x": 258.228,
+            "y": 12.813,
+            "z": 331.172
+        }
+    },
+    {
+        "name": "Part__Feature200",
+        "label": "P0005_MIR003",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0005_MIR003",
+        "volume": 31907.194,
+        "surfaceArea": 24993.363,
+        "size": {
+            "x": 42.249,
+            "y": 112.46,
+            "z": 111.446
+        }
+    },
+    {
+        "name": "Part__Feature201",
+        "label": "P0005_MIR004",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0005_MIR004",
+        "volume": 14029420.331,
+        "surfaceArea": 349710.076,
+        "size": {
+            "x": 285.479,
+            "y": 368.518,
+            "z": 463.188
+        }
+    },
+    {
+        "name": "Part__Feature202",
+        "label": "P0005_MIR005",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0005_MIR005",
+        "volume": 4538997.018,
+        "surfaceArea": 305041.952,
+        "size": {
+            "x": 377.816,
+            "y": 345.087,
+            "z": 205.493
+        }
+    },
+    {
+        "name": "Part__Feature203",
+        "label": "P0005_MIR006",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0005_MIR006",
+        "volume": 4031034.713,
+        "surfaceArea": 162945.707,
+        "size": {
+            "x": 148.995,
+            "y": 172.414,
+            "z": 327.837
+        }
+    },
+    {
+        "name": "Part__Feature204",
+        "label": "P0005_MIR007",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0005_MIR007",
+        "volume": 666146.431,
+        "surfaceArea": 33092.364,
+        "size": {
+            "x": 293.777,
+            "y": 122.064,
+            "z": 32.613
+        }
+    },
+    {
+        "name": "Part__Feature205",
+        "label": "P0013_MIR",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0013_MIR",
+        "volume": 2454179.944,
+        "surfaceArea": 229089.664,
+        "size": {
+            "x": 445.838,
+            "y": 171.003,
+            "z": 91.449
+        }
+    },
+    {
+        "name": "Part__Feature206",
+        "label": "P0013_MIR001",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0013_MIR001",
+        "volume": 223169.418,
+        "surfaceArea": 118101.891,
+        "size": {
+            "x": 228.346,
+            "y": 5.227,
+            "z": 438.564
+        }
+    },
+    {
+        "name": "Part__Feature207",
+        "label": "P0013_MIR002",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0013_MIR002",
+        "volume": 1171130.715,
+        "surfaceArea": 135277.343,
+        "size": {
+            "x": 454.27,
+            "y": 70.636,
+            "z": 272.014
+        }
+    },
+    {
+        "name": "Part__Feature208",
+        "label": "P0013_MIR003",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0013_MIR003",
+        "volume": 14564853.81,
+        "surfaceArea": 233622.781,
+        "size": {
+            "x": 455.214,
+            "y": 467.708,
+            "z": 130.279
+        }
+    },
+    {
+        "name": "Part__Feature209",
+        "label": "P0017_MIR",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0017_MIR",
+        "volume": 4205113.015,
+        "surfaceArea": 119769.683,
+        "size": {
+            "x": 195.138,
+            "y": 319.162,
+            "z": 170.234
+        }
+    },
+    {
+        "name": "Part__Feature210",
+        "label": "P0017_MIR001",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0017_MIR001",
+        "volume": 4444996.789,
+        "surfaceArea": 119671.787,
+        "size": {
+            "x": 61.663,
+            "y": 359.035,
+            "z": 357.843
+        }
+    },
+    {
+        "name": "Part__Feature211",
+        "label": "P0017_MIR002",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0017_MIR002",
+        "volume": 5225906.685,
+        "surfaceArea": 163677.159,
+        "size": {
+            "x": 193.711,
+            "y": 296.349,
+            "z": 198.159
+        }
+    },
+    {
+        "name": "Part__Feature212",
+        "label": "P0017_MIR003",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0017_MIR003",
+        "volume": 7745160.833,
+        "surfaceArea": 436689.75,
+        "size": {
+            "x": 148.208,
+            "y": 492.024,
+            "z": 258.063
+        }
+    },
+    {
+        "name": "Part__Feature213",
+        "label": "P0017_MIR004",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0017_MIR004",
+        "volume": 1137601.361,
+        "surfaceArea": 306900.542,
+        "size": {
+            "x": 393.245,
+            "y": 116.844,
+            "z": 227.087
+        }
+    },
+    {
+        "name": "Part__Feature214",
+        "label": "P0017_MIR005",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0017_MIR005",
+        "volume": 1736563.226,
+        "surfaceArea": 150086.181,
+        "size": {
+            "x": 421.606,
+            "y": 127.837,
+            "z": 68.791
+        }
+    },
+    {
+        "name": "Part__Feature215",
+        "label": "P0017_MIR006",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0017_MIR006",
+        "volume": 15016453.496,
+        "surfaceArea": 486147.642,
+        "size": {
+            "x": 286.672,
+            "y": 349.764,
+            "z": 324.895
+        }
+    },
+    {
+        "name": "Part__Feature216",
+        "label": "P0017_MIR007",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0017_MIR007",
+        "volume": 2168702.075,
+        "surfaceArea": 147978.865,
+        "size": {
+            "x": 86.235,
+            "y": 415.442,
+            "z": 290.162
+        }
+    },
+    {
+        "name": "_P0025_MIR",
+        "label": "P0025_MIR",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0025_MIR",
+        "volume": 11801293.746,
+        "surfaceArea": 806371.138,
+        "size": {
+            "x": 360.301,
+            "y": 287.304,
+            "z": 473.107
+        }
+    },
+    {
+        "name": "Part__Feature217",
+        "label": "SOLID005",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0025_MIR/SOLID005",
+        "volume": 19352886.769,
+        "surfaceArea": 390711.146,
+        "size": {
+            "x": 321.292,
+            "y": 299.476,
+            "z": 425.697
+        }
+    },
+    {
+        "name": "Part__Feature220",
+        "label": "P0026_MIR",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0026_MIR",
+        "volume": 58839.505,
+        "surfaceArea": 39990.212,
+        "size": {
+            "x": 450.324,
+            "y": 28.467,
+            "z": 56.144
+        }
+    },
+    {
+        "name": "Part__Feature221",
+        "label": "P0027_MIR",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0027_MIR",
+        "volume": 12535073.807,
+        "surfaceArea": 393261.59,
+        "size": {
+            "x": 392.027,
+            "y": 462.804,
+            "z": 246.396
+        }
+    },
+    {
+        "name": "Part__Feature222",
+        "label": "P0028_MIR",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0028_MIR",
+        "volume": 1994457.192,
+        "surfaceArea": 142718.586,
+        "size": {
+            "x": 223.776,
+            "y": 225.423,
+            "z": 91.381
+        }
+    },
+    {
+        "name": "Part__Feature223",
+        "label": "P0029_MIR",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0029_MIR",
+        "volume": 1024440.162,
+        "surfaceArea": 86046.322,
+        "size": {
+            "x": 56.488,
+            "y": 158.815,
+            "z": 193.523
+        }
+    },
+    {
+        "name": "Part__Feature224",
+        "label": "P0029_MIR001",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0029_MIR001",
+        "volume": 268061.241,
+        "surfaceArea": 160239.152,
+        "size": {
+            "x": 64.317,
+            "y": 191.201,
+            "z": 363.056
+        }
+    },
+    {
+        "name": "Part__Feature225",
+        "label": "P0029_MIR002",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0029_MIR002",
+        "volume": 7014077.317,
+        "surfaceArea": 349142.594,
+        "size": {
+            "x": 279.87,
+            "y": 127.829,
+            "z": 415.545
+        }
+    },
+    {
+        "name": "Part__Feature226",
+        "label": "P0032_MIR",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0032_MIR",
+        "volume": 21106534.317,
+        "surfaceArea": 490625.098,
+        "size": {
+            "x": 214.245,
+            "y": 497.552,
+            "z": 394.559
+        }
+    },
+    {
+        "name": "Part__Feature227",
+        "label": "P0033_MIR",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0033_MIR",
+        "volume": 8044096.043,
+        "surfaceArea": 593045.967,
+        "size": {
+            "x": 273.499,
+            "y": 280.325,
+            "z": 397.467
+        }
+    },
+    {
+        "name": "Part__Feature228",
+        "label": "P0034_MIR",
+        "path": "/P0001_ASM/P0057_ASM/P0003_MIR_ASM/P0034_MIR",
+        "volume": 138561.623,
+        "surfaceArea": 45865.578,
+        "size": {
+            "x": 103.906,
+            "y": 28.193,
+            "z": 234.75
+        }
+    },
+    {
+        "name": "_P0035_MIR_ASM",
+        "label": "P0035_MIR_ASM",
+        "path": "/P0001_ASM/P0057_ASM/P0035_MIR_ASM",
+        "volume": 1319934.344,
+        "surfaceArea": 122386.656,
+        "size": {
+            "x": 40.458,
+            "y": 362.649,
+            "z": 185.657
+        }
+    },
+    {
+        "name": "Part__Feature229",
+        "label": "P0036_MIR",
+        "path": "/P0001_ASM/P0057_ASM/P0035_MIR_ASM/P0036_MIR",
+        "volume": 5854511.166,
+        "surfaceArea": 326930.551,
+        "size": {
+            "x": 362.009,
+            "y": 107.958,
+            "z": 396.776
+        }
+    },
+    {
+        "name": "_P0058_ASM",
+        "label": "P0058_ASM",
+        "path": "/P0001_ASM/P0058_ASM",
+        "volume": 3649337.846,
+        "surfaceArea": 395378.857,
+        "size": {
+            "x": 250.334,
+            "y": 467.062,
+            "z": 288.336
+        }
+    },
+    {
+        "name": "_P0038_MIR_ASM",
+        "label": "P0038_MIR_ASM",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM",
+        "volume": 8661662.936,
+        "surfaceArea": 555464.666,
+        "size": {
+            "x": 426.022,
+            "y": 393.433,
+            "z": 432.275
+        }
+    },
+    {
+        "name": "_P0039_MIR_ASM",
+        "label": "P0039_MIR_ASM",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0039_MIR_ASM",
+        "volume": 5664938.702,
+        "surfaceArea": 536866.528,
+        "size": {
+            "x": 219.215,
+            "y": 476.565,
+            "z": 285.759
+        }
+    },
+    {
+        "name": "_P0040_MIR_ASM",
+        "label": "P0040_MIR_ASM",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0039_MIR_ASM/P0040_MIR_ASM",
+        "volume": 4201831.185,
+        "surfaceArea": 420988.567,
+        "size": {
+            "x": 242.93,
+            "y": 322.582,
+            "z": 248.763
+        }
+    },
+    {
+        "name": "Part__Feature230",
+        "label": "P0041_MIR",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0039_MIR_ASM/P0040_MIR_ASM/P0041_MIR",
+        "volume": 2315534.648,
+        "surfaceArea": 173503.343,
+        "size": {
+            "x": 455.363,
+            "y": 167.684,
+            "z": 64.791
+        }
+    },
+    {
+        "name": "_P0042_MIR",
+        "label": "P0042_MIR",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0039_MIR_ASM/P0040_MIR_ASM/P0042_MIR",
+        "volume": 10936.493,
+        "surfaceArea": 23934.756,
+        "size": {
+            "x": 9.541,
+            "y": 297.186,
+            "z": 32.148
+        }
+    },
+    {
+        "name": "Part__Feature231",
+        "label": "SOLID006",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0039_MIR_ASM/P0040_MIR_ASM/P0042_MIR/SOLID006",
+        "volume": 1022719.491,
+        "surfaceArea": 76892.851,
+        "size": {
+            "x": 289.146,
+            "y": 44.849,
+            "z": 180.37
+        }
+    },
+    {
+        "name": "_P0043_MIR_ASM",
+        "label": "P0043_MIR_ASM",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0039_MIR_ASM/P0040_MIR_ASM/P0043_MIR_ASM",
+        "volume": 892308.933,
+        "surfaceArea": 94933.924,
+        "size": {
+            "x": 277.397,
+            "y": 171.781,
+            "z": 87.279
+        }
+    },
+    {
+        "name": "_P0044_MIR",
+        "label": "P0044_MIR",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0039_MIR_ASM/P0040_MIR_ASM/P0043_MIR_ASM/P0044_MIR",
+        "volume": 480708.863,
+        "surfaceArea": 63136.761,
+        "size": {
+            "x": 84.691,
+            "y": 414.833,
+            "z": 55.425
+        }
+    },
+    {
+        "name": "Part__Feature233",
+        "label": "SOLID007",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0039_MIR_ASM/P0040_MIR_ASM/P0043_MIR_ASM/P0044_MIR/SOLID007",
+        "volume": 144114.883,
+        "surfaceArea": 28988.101,
+        "size": {
+            "x": 310.982,
+            "y": 42.245,
+            "z": 64.458
+        }
+    },
+    {
+        "name": "Part__Feature237",
+        "label": "P0045_MIR",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0039_MIR_ASM/P0040_MIR_ASM/P0043_MIR_ASM/P0045_MIR",
+        "volume": 1377259.809,
+        "surfaceArea": 290258.111,
+        "size": {
+            "x": 460.13,
+            "y": 287.628,
+            "z": 80.055
+        }
+    },
+    {
+        "name": "Part__Feature238",
+        "label": "P0045_MIR001",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0039_MIR_ASM/P0040_MIR_ASM/P0043_MIR_ASM/P0045_MIR001",
+        "volume": 345126.228,
+        "surfaceArea": 246113.486,
+        "size": {
+            "x": 31.776,
+            "y": 247.867,
+            "z": 491.179
+        }
+    },
+    {
+        "name": "Part__Feature239",
+        "label": "P0045_MIR002",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0039_MIR_ASM/P0040_MIR_ASM/P0043_MIR_ASM/P0045_MIR002",
+        "volume": 960530.967,
+        "surfaceArea": 57241.461,
+        "size": {
+            "x": 78.094,
+            "y": 315.75,
+            "z": 67.653
+        }
+    },
+    {
+        "name": "Part__Feature240",
+        "label": "P0045_MIR003",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0039_MIR_ASM/P0040_MIR_ASM/P0043_MIR_ASM/P0045_MIR003",
+        "volume": 295434.655,
+        "surfaceArea": 148915.576,
+        "size": {
+            "x": 6.811,
+            "y": 435.28,
+            "z": 495.226
+        }
+    },
+    {
+        "name": "Part__Feature241",
+        "label": "P0047_MIR",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0039_MIR_ASM/P0040_MIR_ASM/P0043_MIR_ASM/P0047_MIR",
+        "volume": 17592211.258,
+        "surfaceArea": 617350.985,
+        "size": {
+            "x": 217.702,
+            "y": 428.821,
+            "z": 494.088
+        }
+    },
+    {
+        "name": "Part__Feature242",
+        "label": "P0047_MIR001",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0039_MIR_ASM/P0040_MIR_ASM/P0043_MIR_ASM/P0047_MIR001",
+        "volume": 216274.158,
+        "surfaceArea": 35255.255,
+        "size": {
+            "x": 114.006,
+            "y": 22.317,
+            "z": 339.51
+        }
+    },
+    {
+        "name": "Part__Feature243",
+        "label": "P0047_MIR002",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0039_MIR_ASM/P0040_MIR_ASM/P0043_MIR_ASM/P0047_MIR002",
+        "volume": 545073.312,
+        "surfaceArea": 67820.417,
+        "size": {
+            "x": 72.697,
+            "y": 44.333,
+            "z": 309.28
+        }
+    },
+    {
+        "name": "Part__Feature244",
+        "label": "P0047_MIR003",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0039_MIR_ASM/P0040_MIR_ASM/P0043_MIR_ASM/P0047_MIR003",
+        "volume": 848822.802,
+        "surfaceArea": 198121.833,
+        "size": {
+            "x": 278.791,
+            "y": 101.709,
+            "z": 239.013
+        }
+    },
+    {
+        "name": "Part__Feature245",
+        "label": "P0046_MIR",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0039_MIR_ASM/P0040_MIR_ASM/P0043_MIR_ASM/P0046_MIR",
+        "volume": 242644.333,
+        "surfaceArea": 49928.03,
+        "size": {
+            "x": 252.279,
+            "y": 25.194,
+            "z": 69.262
+        }
+    },
+    {
+        "name": "Part__Feature246",
+        "label": "P0046_MIR001",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0039_MIR_ASM/P0040_MIR_ASM/P0043_MIR_ASM/P0046_MIR001",
+        "volume": 1021713.473,
+        "surfaceArea": 128938.082,
+        "size": {
+            "x": 156.638,
+            "y": 210.143,
+            "z": 325.78
+        }
+    },
+    {
+        "name": "Part__Feature247",
+        "label": "P0032_MIR001",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0032_MIR001",
+        "volume": 35629368.185,
+        "surfaceArea": 428619.093,
+        "size": {
+            "x": 286.248,
+            "y": 446.283,
+            "z": 491.341
+        }
+    },
+    {
+        "name": "Part__Feature248",
+        "label": "P0034_MIR001",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0034_MIR001",
+        "volume": 4398531.591,
+        "surfaceArea": 366981.665,
+        "size": {
+            "x": 358.84,
+            "y": 99.762,
+            "z": 458.723
+        }
+    },
+    {
+        "name": "Part__Feature249",
+        "label": "P0026_MIR001",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0026_MIR001",
+        "volume": 2742727.007,
+        "surfaceArea": 67961.9,
+        "size": {
+            "x": 80.989,
+            "y": 227.982,
+            "z": 279.564
+        }
+    },
+    {
+        "name": "Part__Feature250",
+        "label": "P0027_MIR001",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0027_MIR001",
+        "volume": 7942101.719,
+        "surfaceArea": 182886.54,
+        "size": {
+            "x": 390.527,
+            "y": 412.422,
+            "z": 125.353
+        }
+    },
+    {
+        "name": "Part__Feature251",
+        "label": "P0028_MIR001",
+        "path": "/P0001_ASM/P0058_ASM/P0038_MIR_ASM/P0028_MIR001",
+        "volume": 200083.96,
+        "surfaceArea": 97645.316,
+        "size": {
+            "x": 9.893,
+            "y": 222.339,
+            "z": 470.936
+        }
+    },
+    {
+        "name": "_P0050_MIR_ASM",
+        "label": "P0050_MIR_ASM",
+        "path": "/P0001_ASM/P0058_ASM/P0050_MIR_ASM",
+        "volume": 27602964.82,
+        "surfaceArea": 541357.711,
+        "size": {
+            "x": 447.252,
+            "y": 291.374,
+            "z": 494.527
+        }
+    },
+    {
+        "name": "Part__Feature252",
+        "label": "P0056_MIR",
+        "path": "/P0001_ASM/P0058_ASM/P0050_MIR_ASM/P0056_MIR",
+        "volume": 4691485.662,
+        "surfaceArea": 93087.565,
+        "size": {
+            "x": 231.712,
+            "y": 163.323,
+            "z": 277.77
+        }
+    },
+    {
+        "name": "_P0059_ASM",
+        "label": "P0059_ASM",
+        "path": "/P0001_ASM/P0059_ASM",
+        "volume": 704331.118,
+        "surfaceArea": 202517.713,
+        "size": {
+            "x": 108.968,
+            "y": 253.2,
+            "z": 330.19
+        }
+    },
+    {
+        "name": "_P0060_ASM",
+        "label": "P0060_ASM",
+        "path": "/P0001_ASM/P0059_ASM/P0060_ASM",
+        "volume": 230776.006,
+        "surfaceArea": 32214.972,
+        "size": {
+            "x": 195.362,
+            "y": 53.278,
+            "z": 87.007
+        }
+    },
+    {
+        "name": "Part__Feature253",
+        "label": "P0061",
+        "path": "/P0001_ASM/P0059_ASM/P0060_ASM/P0061",
+        "volume": 714355.546,
+        "surfaceArea": 80516.327,
+        "size": {
+            "x": 128.17,
+            "y": 231.689,
+            "z": 105.543
+        }
+    },
+    {
+        "name": "Part__Feature254",
+        "label": "P0062",
+        "path": "/P0001_ASM/P0059_ASM/P0060_ASM/P0062",
+        "volume": 359380.731,
+        "surfaceArea": 24550.71,
+        "size": {
+            "x": 90.595,
+            "y": 155.293,
+            "z": 53.836
+        }
+    },
+    {
+        "name": "Part__Feature255",
+        "label": "P0063",
+        "path": "/P0001_ASM/P0059_ASM/P0060_ASM/P0063",
+        "volume": 746775.103,
+        "surfaceArea": 157101.07,
+        "size": {
+            "x": 283.872,
+            "y": 89.63,
+            "z": 144.302
+        }
+    },
+    {
+        "name": "_P0064_ASM",
+        "label": "P0064_ASM",
+        "path": "/P0001_ASM/P0059_ASM/P0064_ASM",
+        "volume": 2780029.325,
+        "surfaceArea": 179366.18,
+        "size": {
+            "x": 143.28,
+            "y": 172.616,
+            "z": 318.118
+        }
+    },
+    {
+        "name": "_P0065_ASM",
+        "label": "P0065_ASM",
+        "path": "/P0001_ASM/P0059_ASM/P0064_ASM/P0065_ASM",
+        "volume": 18517777.171,
+        "surfaceArea": 611254.114,
+        "size": {
+            "x": 428.94,
+            "y": 246.112,
+            "z": 410.342
+        }
+    },
+    {
+        "name": "Part__Feature256",
+        "label": "P0066",
+        "path": "/P0001_ASM/P0059_ASM/P0064_ASM/P0065_ASM/P0066",
+        "volume": 17858884.524,
+        "surfaceArea": 244513.842,
+        "size": {
+            "x": 300.179,
+            "y": 226.761,
+            "z": 475.99
+        }
+    },
+    {
+        "name": "Part__Feature257",
+        "label": "P0067",
+        "path": "/P0001_ASM/P0059_ASM/P0064_ASM/P0065_ASM/P0067",
+        "volume": 322253.691,
+        "surfaceArea": 64024.001,
+        "size": {
+            "x": 252.546,
+            "y": 78.598,
+            "z": 40.669
+        }
+    },
+    {
+        "name": "_P0068_ASM",
+        "label": "P0068_ASM",
+        "path": "/P0001_ASM/P0059_ASM/P0068_ASM",
+        "volume": 381620.45,
+        "surfaceArea": 243192.693,
+        "size": {
+            "x": 14.132,
+            "y": 367.279,
+            "z": 462.99
+        }
+    },
+    {
+        "name": "_P0069_ASM",
+        "label": "P0069_ASM",
+        "path": "/P0001_ASM/P0059_ASM/P0068_ASM/P0069_ASM",
+        "volume": 4316692.962,
+        "surfaceArea": 257116.589,
+        "size": {
+            "x": 177.974,
+            "y": 183.282,
+            "z": 275.798
+        }
+    },
+    {
+        "name": "Part__Feature258",
+        "label": "P0070",
+        "path": "/P0001_ASM/P0059_ASM/P0068_ASM/P0069_ASM/P0070",
+        "volume": 15819.068,
+        "surfaceArea": 12641.903,
+        "size": {
+            "x": 122.155,
+            "y": 18.197,
+            "z": 60.689
+        }
+    },
+    {
+        "name": "Part__Feature259",
+        "label": "P0071",
+        "path": "/P0001_ASM/P0059_ASM/P0068_ASM/P0069_ASM/P0071",
+        "volume": 11656622.709,
+        "surfaceArea": 264552.471,
+        "size": {
+            "x": 251.408,
+            "y": 389.736,
+            "z": 460.762
+        }
+    },
+    {
+        "name": "Part__Feature260",
+        "label": "P0072",
+        "path": "/P0001_ASM/P0059_ASM/P0068_ASM/P0069_ASM/P0072",
+        "volume": 307323.229,
+        "surfaceArea": 61179.903,
+        "size": {
+            "x": 220.619,
+            "y": 59.059,
+            "z": 66.148
+        }
+    },
+    {
+        "name": "Part__Feature261",
+        "label": "P0073",
+        "path": "/P0001_ASM/P0059_ASM/P0073",
+        "volume": 231916.537,
+        "surfaceArea": 98763.653,
+        "size": {
+            "x": 41.608,
+            "y": 169.263,
+            "z": 386.306
+        }
+    },
+    {
+        "name": "Part__Feature262",
+        "label": "P0074",
+        "path": "/P0001_ASM/P0059_ASM/P0074",
+        "volume": 1614299.636,
+        "surfaceArea": 229174.919,
+        "size": {
+            "x": 220.43,
+            "y": 42.624,
+            "z": 432.804
+        }
+    },
+    {
+        "name": "_P0075_ASM",
+        "label": "P0075_ASM",
+        "path": "/P0001_ASM/P0075_ASM",
+        "volume": 719732.464,
+        "surfaceArea": 108391.244,
+        "size": {
+            "x": 351.88,
+            "y": 283.642,
+            "z": 48.063
+        }
+    },
+    {
+        "name": "_P0076_ASM",
+        "label": "P0076_ASM",
+        "path": "/P0001_ASM/P0075_ASM/P0076_ASM",
+        "volume": 424953.501,
+        "surfaceArea": 103408.879,
+        "size": {
+            "x": 86.739,
+            "y": 44.423,
+            "z": 486.084
+        }
+    },
+    {
+        "name": "_P0078_ASM",
+        "label": "P0077_ASM",
+        "path": "/P0001_ASM/P0075_ASM/P0076_ASM/P0077_ASM",
+        "volume": 21737613.44,
+        "surfaceArea": 332343.697,
+        "size": {
+            "x": 353.383,
+            "y": 296.781,
+            "z": 441.363
+        }
+    },
+    {
+        "name": "Part__Feature263",
+        "label": "P0079",
+        "path": "/P0001_ASM/P0075_ASM/P0076_ASM/P0077_ASM/P0079",
+        "volume": 1528727.849,
+        "surfaceArea": 205677.578,
+        "size": {
+            "x": 132.262,
+            "y": 157.74,
+            "z": 461.433
+        }
+    },
+    {
+        "name": "Part__Feature264",
+        "label": "P0080",
+        "path": "/P0001_ASM/P0075_ASM/P0076_ASM/P0077_ASM/P0080",
+        "volume": 2652413.273,
+        "surfaceArea": 299338.103,
+        "size": {
+            "x": 382.052,
+            "y": 361.479,
+            "z": 153.652
+        }
+    },
+    {
+        "name": "Part__Feature265",
+        "label": "P0081",
+        "path": "/P0001_ASM/P0075_ASM/P0076_ASM/P0077_ASM/P0081",
+        "volume": 157775.674,
+        "surfaceArea": 21301.591,
+        "size": {
+            "x": 56.622,
+            "y": 15.869,
+            "z": 297.987
+        }
+    },
+    {
+        "name": "Part__Feature266",
+        "label": "P0082",
+        "path": "/P0001_ASM/P0075_ASM/P0076_ASM/P0077_ASM/P0082",
+        "volume": 2781585.166,
+        "surfaceArea": 110993.835,
+        "size": {
+            "x": 433.474,
+            "y": 321.123,
+            "z": 48.205
+        }
+    },
+    {
+        "name": "Part__Feature267",
+        "label": "P0083",
+        "path": "/P0001_ASM/P0075_ASM/P0076_ASM/P0077_ASM/P0083",
+        "volume": 2464916.26,
+        "surfaceArea": 233220.517,
+        "size": {
+            "x": 224.063,
+            "y": 214.932,
+            "z": 180.994
+        }
+    },
+    {
+        "name": "_P0084_ASM",
+        "label": "P0084_ASM",
+        "path": "/P0001_ASM/P0075_ASM/P0084_ASM",
+        "volume": 8425507.91,
+        "surfaceArea": 159005.856,
+        "size": {
+            "x": 255.198,
+            "y": 266.712,
+            "z": 223.991
+        }
+    },
+    {
+        "name": "_P0086_ASM",
+        "label": "P0085_ASM",
+        "path": "/P0001_ASM/P0075_ASM/P0084_ASM/P0085_ASM",
+        "volume": 6211806.029,
+        "surfaceArea": 320709.699,
+        "size": {
+            "x": 161.707,
+            "y": 215.219,
+            "z": 450.162
+        }
+    },
+    {
+        "name": "Part__Feature268",
+        "label": "P0087",
+        "path": "/P0001_ASM/P0075_ASM/P0084_ASM/P0085_ASM/P0087",
+        "volume": 4250719.299,
+        "surfaceArea": 168181.198,
+        "size": {
+            "x": 342.817,
+            "y": 177.946,
+            "z": 371.158
+        }
+    },
+    {
+        "name": "Part__Feature269",
+        "label": "P0088",
+        "path": "/P0001_ASM/P0075_ASM/P0084_ASM/P0085_ASM/P0088",
+        "volume": 22060706.585,
+        "surfaceArea": 380485.882,
+        "size": {
+            "x": 485.125,
+            "y": 172.183,
+            "z": 444.241
+        }
+    },
+    {
+        "name": "Part__Feature270",
+        "label": "P0089",
+        "path": "/P0001_ASM/P0075_ASM/P0084_ASM/P0085_ASM/P0089",
+        "volume": 338963.779,
+        "surfaceArea": 140533.625,
+        "size": {
+            "x": 388.216,
+            "y": 68.015,
+            "z": 119.392
+        }
+    },
+    {
+        "name": "Part__Feature271",
+        "label": "P0090",
+        "path": "/P0001_ASM/P0075_ASM/P0084_ASM/P0085_ASM/P0090",
+        "volume": 650277.984,
+        "surfaceArea": 197482.624,
+        "size": {
+            "x": 380.434,
+            "y": 29.986,
+            "z": 236.677
+        }
+    },
+    {
+        "name": "Part__Feature272",
+        "label": "P0091",
+        "path": "/P0001_ASM/P0075_ASM/P0084_ASM/P0085_ASM/P0091",
+        "volume": 2045195.915,
+        "surfaceArea": 380516.335,
+        "size": {
+            "x": 321.195,
+            "y": 223.321,
+            "z": 363.269
+        }
+    },
+    {
+        "name": "_P0093_ASM",
+        "label": "P0092_ASM",
+        "path": "/P0001_ASM/P0075_ASM/P0092_ASM",
+        "volume": 5380347.06,
+        "surfaceArea": 308955.46,
+        "size": {
+            "x": 324.116,
+            "y": 302.345,
+            "z": 208.472
+        }
+    },
+    {
+        "name": "_P0095_ASM",
+        "label": "P0094_ASM",
+        "path": "/P0001_ASM/P0075_ASM/P0092_ASM/P0094_ASM",
+        "volume": 2899528.9,
+        "surfaceArea": 96183.025,
+        "size": {
+            "x": 228.165,
+            "y": 417.616,
+            "z": 62.707
+        }
+    },
+    {
+        "name": "Part__Feature273",
+        "label": "P0096",
+        "path": "/P0001_ASM/P0075_ASM/P0092_ASM/P0094_ASM/P0096",
+        "volume": 1994759.884,
+        "surfaceArea": 170616.651,
+        "size": {
+            "x": 371.374,
+            "y": 56.223,
+            "z": 210.39
+        }
+    },
+    {
+        "name": "Part__Feature274",
+        "label": "P0097",
+        "path": "/P0001_ASM/P0075_ASM/P0092_ASM/P0094_ASM/P0097",
+        "volume": 23308.057,
+        "surfaceArea": 19050.962,
+        "size": {
+            "x": 33.252,
+            "y": 116.255,
+            "z": 42.147
+        }
+    },
+    {
+        "name": "Part__Feature275",
+        "label": "P0098",
+        "path": "/P0001_ASM/P0075_ASM/P0092_ASM/P0094_ASM/P0098",
+        "volume": 8418.528,
+        "surfaceArea": 14171.646,
+        "size": {
+            "x": 120.497,
+            "y": 6.415,
+            "z": 80.093
+        }
+    },
+    {
+        "name": "Part__Feature276",
+        "label": "P0099",
+        "path": "/P0001_ASM/P0075_ASM/P0092_ASM/P0094_ASM/P0099",
+        "volume": 1984959.262,
+        "surfaceArea": 397519.852,
+        "size": {
+            "x": 299.961,
+            "y": 156.469,
+            "z": 382.384
+        }
+    },
+    {
+        "name": "Part__Feature277",
+        "label": "P0100",
+        "path": "/P0001_ASM/P0075_ASM/P0092_ASM/P0094_ASM/P0100",
+        "volume": 438818.34,
+        "surfaceArea": 63036.386,
+        "size": {
+            "x": 137.944,
+            "y": 17.604,
+            "z": 403.551
+        }
+    },
+    {
+        "name": "Part__Feature278",
+        "label": "P0101",
+        "path": "/P0001_ASM/P0075_ASM/P0101",
+        "volume": 35023773.192,
+        "surfaceArea": 894613.378,
+        "size": {
+            "x": 336.765,
+            "y": 479.957,
+            "z": 402.022
+        }
+    },
+    {
+        "name": "Part__Feature279",
+        "label": "P0102",
+        "path": "/P0001_ASM/P0075_ASM/P0102",
+        "volume": 12284862.044,
+        "surfaceArea": 310986.429,
+        "size": {
+            "x": 477.389,
+            "y": 149.078,
+            "z": 338.143
+        }
+    },
+    {
+        "name": "Part__Feature280",
+        "label": "P0103",
+        "path": "/P0001_ASM/P0103",
+        "volume": 206339.45,
+        "surfaceArea": 100400.238,
+        "size": {
+            "x": 293.039,
+            "y": 17.062,
+            "z": 214.389
+        }
+    },
+    {
+        "name": "_P0104_ASM",
+        "label": "P0104_ASM",
+        "path": "/P0001_ASM/P0104_ASM",
+        "volume": 3827520.436,
+        "surfaceArea": 523733.97,
+        "size": {
+            "x": 352.347,
+            "y": 178.066,
+            "z": 476.004
+        }
+    },
+    {
+        "name": "P0105_ASM",
+        "label": "P0105_ASM",
+        "path": "/P0001_ASM/P0104_ASM/P0105_ASM",
+        "volume": 267961.02,
+        "surfaceArea": 21108.371,
+        "size": {
+            "x": 24.426,
+            "y": 230.279,
+            "z": 96.49
+        }
+    },
+    {
+        "name": "Part__Feature281",
+        "label": "P0106",
+        "path": "/P0001_ASM/P0104_ASM/P0105_ASM/P0106",
+        "volume": 43829.833,
+        "surfaceArea": 11680.219,
+        "size": {
+            "x": 48.314,
+            "y": 90.238,
+            "z": 22.954
+        }
+    },
+    {
+        "name": "Part__Feature282",
+        "label": "P0107",
+        "path": "/P0001_ASM/P0104_ASM/P0105_ASM/P0107",
+        "volume": 7264125.037,
+        "surfaceArea": 526289.588,
+        "size": {
+            "x": 393.835,
+            "y": 198.535,
+            "z": 367.052
+        }
+    },
+    {
+        "name": "Part__Feature283",
+        "label": "P0108",
+        "path": "/P0001_ASM/P0104_ASM/P0105_ASM/P0108",
+        "volume": 13392648.005,
+        "surfaceArea": 698116.08,
+        "size": {
+            "x": 456.883,
+            "y": 343.24,
+            "z": 431.808
+        }
+    },
+    {
+        "name": "Part__Feature284",
+        "label": "P0109",
+        "path": "/P0001_ASM/P0104_ASM/P0105_ASM/P0109",
+        "volume": 16744611.935,
+        "surfaceArea": 268864.274,
+        "size": {
+            "x": 274.424,
+            "y": 361.751,
+            "z": 369.997
+        }
+    },
+    {
+        "name": "Part__Feature285",
+        "label": "P0110",
+        "path": "/P0001_ASM/P0104_ASM/P0105_ASM/P0110",
+        "volume": 6952824.751,
+        "surfaceArea": 455635.178,
+        "size": {
+            "x": 479.785,
+            "y": 229.406,
+            "z": 208.956
+        }
+    },
+    {
+        "name": "Part__Feature287",
+        "label": "P0111",
+        "path": "/P0001_ASM/P0104_ASM/P0105_ASM/P0111",
+        "volume": 19315193.67,
+        "surfaceArea": 628718.226,
+        "size": {
+            "x": 485.486,
+            "y": 487.501,
+            "z": 251.192
+        }
+    },
+    {
+        "name": "Part__Feature288",
+        "label": "P0112",
+        "path": "/P0001_ASM/P0104_ASM/P0105_ASM/P0112",
+        "volume": 573610.471,
+        "surfaceArea": 94519.622,
+        "size": {
+            "x": 242.515,
+            "y": 30.107,
+            "z": 164.086
+        }
+    },
+    {
+        "name": "Part__Feature290",
+        "label": "P0113",
+        "path": "/P0001_ASM/P0104_ASM/P0105_ASM/P0113",
+        "volume": 356241.486,
+        "surfaceArea": 94883.896,
+        "size": {
+            "x": 244.796,
+            "y": 72.812,
+            "z": 282.407
+        }
+    }
+]

@@ -1,0 +1,29 @@
+import java.io.File;
+
+import "http://vitruv.tools/methodologisttemplate/sysml" as sysml
+import "http://vitruv.tools/cad/model" as cad
+
+reactions: sysmlModel2CadModel
+in reaction to changes in sysml
+execute actions in cad
+
+// Insert a SysML model as root of the model instance.
+// As reaction, create and persist a CAD model as root.
+reaction ModelInsertedAsRoot {
+    after element sysml::Model inserted as root
+    call createAndRegisterCadModel(newValue)
+}
+
+routine createAndRegisterCadModel(sysml::Model model) {
+    match {
+        require absence of cad::CAD_Model corresponding to model
+    }
+    create {
+        val cadModel = new cad::CAD_Model
+    }
+    update {
+        persistProjectRelative(model, cadModel, new File("").toString() + "cad.model")
+
+        addCorrespondenceBetween(model, cadModel)
+    }
+}

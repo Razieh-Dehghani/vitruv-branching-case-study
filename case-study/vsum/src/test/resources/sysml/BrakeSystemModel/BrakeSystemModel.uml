@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Blocks="http://www.eclipse.org/papyrus/sysml/1.6/SysML/Blocks" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http://www.eclipse.org/papyrus/sysml/1.6/SysML/Blocks http://www.eclipse.org/papyrus/sysml/1.6/SysML#//blocks">
+  <uml:Model xmi:id="_CxChsJGVEfGICs4ezpB-dw" name="BrakeSystemModel">
+    <packageImport xmi:type="uml:PackageImport" xmi:id="_C0hTgJGVEfGICs4ezpB-dw">
+      <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+    </packageImport>
+    <packageImport xmi:type="uml:PackageImport" xmi:id="_C0ooQJGVEfGICs4ezpB-dw">
+      <importedPackage xmi:type="uml:Package" href="pathmap://SysML16_LIBRARIES/SysML-Standard-Library.uml#SysML.package_packagedElement_Libraries"/>
+    </packageImport>
+    <packagedElement xmi:type="uml:Package" xmi:id="_UUejQJGVEfGICs4ezpB-dw" name="Activities">
+      <packagedElement xmi:type="uml:Activity" xmi:id="_oCPuYJGVEfGICs4ezpB-dw" name="ApplyBrake" node="_z543cJJpEfGICs4ezpB-dw _3hBgwJJqEfGICs4ezpB-dw _d_EUAJJrEfGICs4ezpB-dw _H6bisJJsEfGICs4ezpB-dw _kH1MkJJsEfGICs4ezpB-dw _zkPQMJJsEfGICs4ezpB-dw _F8PiQJJtEfGICs4ezpB-dw" group="_iyl_UJJpEfGICs4ezpB-dw _9UAWkJJrEfGICs4ezpB-dw">
+        <edge xmi:type="uml:ControlFlow" xmi:id="_jm44IJJrEfGICs4ezpB-dw" target="_d_EUAJJrEfGICs4ezpB-dw" source="_3hBgwJJqEfGICs4ezpB-dw"/>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_sL_FsJJrEfGICs4ezpB-dw" name="[Push more] (pedalTravel += Δp)" target="_z543cJJpEfGICs4ezpB-dw" source="_d_EUAJJrEfGICs4ezpB-dw"/>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_W6GnAJJsEfGICs4ezpB-dw" name="[Push less] (pedalTravel -= Δp)" target="_H6bisJJsEfGICs4ezpB-dw" source="_d_EUAJJrEfGICs4ezpB-dw"/>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_mzCOkJJsEfGICs4ezpB-dw" target="_kH1MkJJsEfGICs4ezpB-dw" source="_H6bisJJsEfGICs4ezpB-dw"/>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_DVpTcJJtEfGICs4ezpB-dw" name="[Yes]" target="_zkPQMJJsEfGICs4ezpB-dw" source="_kH1MkJJsEfGICs4ezpB-dw"/>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_PfQJkJJtEfGICs4ezpB-dw" target="_d_EUAJJrEfGICs4ezpB-dw" source="_F8PiQJJtEfGICs4ezpB-dw"/>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_S9E7UJJtEfGICs4ezpB-dw" name="[No]" target="_F8PiQJJtEfGICs4ezpB-dw" source="_kH1MkJJsEfGICs4ezpB-dw"/>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_URUKYJJtEfGICs4ezpB-dw" target="_F8PiQJJtEfGICs4ezpB-dw" source="_z543cJJpEfGICs4ezpB-dw"/>
+        <group xmi:type="uml:ActivityPartition" xmi:id="_iyl_UJJpEfGICs4ezpB-dw" name="PushBrakePadsTogetherPartition" node="_z543cJJpEfGICs4ezpB-dw" represents="__RlMsJGeEfGICs4ezpB-dw"/>
+        <group xmi:type="uml:ActivityPartition" xmi:id="_9UAWkJJrEfGICs4ezpB-dw" name="PullBrakePadsApartPartition" node="_H6bisJJsEfGICs4ezpB-dw" represents="__RlMsJGeEfGICs4ezpB-dw"/>
+        <node xmi:type="uml:CallBehaviorAction" xmi:id="_z543cJJpEfGICs4ezpB-dw" name="Push brake pads together" incoming="_sL_FsJJrEfGICs4ezpB-dw" outgoing="_URUKYJJtEfGICs4ezpB-dw" inPartition="_iyl_UJJpEfGICs4ezpB-dw"/>
+        <node xmi:type="uml:InitialNode" xmi:id="_3hBgwJJqEfGICs4ezpB-dw" name="Start (pedalTravel == 0%)" outgoing="_jm44IJJrEfGICs4ezpB-dw"/>
+        <node xmi:type="uml:DecisionNode" xmi:id="_d_EUAJJrEfGICs4ezpB-dw" name="How does the driver change the pressure on the brake pedal (Δp)?" incoming="_jm44IJJrEfGICs4ezpB-dw _PfQJkJJtEfGICs4ezpB-dw" outgoing="_sL_FsJJrEfGICs4ezpB-dw _W6GnAJJsEfGICs4ezpB-dw"/>
+        <node xmi:type="uml:CallBehaviorAction" xmi:id="_H6bisJJsEfGICs4ezpB-dw" name="Pull brake pads apart" incoming="_W6GnAJJsEfGICs4ezpB-dw" outgoing="_mzCOkJJsEfGICs4ezpB-dw" inPartition="_9UAWkJJrEfGICs4ezpB-dw"/>
+        <node xmi:type="uml:DecisionNode" xmi:id="_kH1MkJJsEfGICs4ezpB-dw" name="pedalTravel == 0%?" incoming="_mzCOkJJsEfGICs4ezpB-dw" outgoing="_DVpTcJJtEfGICs4ezpB-dw _S9E7UJJtEfGICs4ezpB-dw"/>
+        <node xmi:type="uml:ActivityFinalNode" xmi:id="_zkPQMJJsEfGICs4ezpB-dw" name="End" incoming="_DVpTcJJtEfGICs4ezpB-dw"/>
+        <node xmi:type="uml:JoinNode" xmi:id="_F8PiQJJtEfGICs4ezpB-dw" name="" incoming="_S9E7UJJtEfGICs4ezpB-dw _URUKYJJtEfGICs4ezpB-dw" outgoing="_PfQJkJJtEfGICs4ezpB-dw"/>
+      </packagedElement>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_Hx7osJGVEfGICs4ezpB-dw" name="Structure">
+      <packagedElement xmi:type="uml:Class" xmi:id="_7tn3YJGWEfGICs4ezpB-dw" name="BrakeSystem">
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_XyL8EpGcEfGICs4ezpB-dw" name="hydraulicSystem" type="_wwUfgJGaEfGICs4ezpB-dw" aggregation="composite" association="_XyLVAJGcEfGICs4ezpB-dw">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_XyMjIJGcEfGICs4ezpB-dw" value="1"/>
+          <upperValue xmi:type="uml:LiteralInteger" xmi:id="_7Q6pEJGdEfGICs4ezpB-dw" value="1"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_Q6Aa8pGqEfGICs4ezpB-dw" name="rearBrakeAssemblies" type="_LRSe8JGqEfGICs4ezpB-dw" aggregation="composite" association="_Q5_z4JGqEfGICs4ezpB-dw">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Q6BCAJGqEfGICs4ezpB-dw" value="2"/>
+          <upperValue xmi:type="uml:LiteralInteger" xmi:id="_yWsNIJGqEfGICs4ezpB-dw" value="2"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_Rdh-wpGqEfGICs4ezpB-dw" name="frontBrakeAssemblies" type="_KFjEkJGqEfGICs4ezpB-dw" aggregation="composite" association="_RdhXsJGqEfGICs4ezpB-dw">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Rdh-w5GqEfGICs4ezpB-dw" value="2"/>
+          <upperValue xmi:type="uml:LiteralInteger" xmi:id="_28t9EJGqEfGICs4ezpB-dw" value="2"/>
+        </ownedAttribute>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_wwUfgJGaEfGICs4ezpB-dw" name="HydraulicSystem">
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_ZPIbMJGcEfGICs4ezpB-dw" name="hydraulicCycles" type="_0w9DYJGaEfGICs4ezpB-dw" aggregation="composite" association="_ZPHNEJGcEfGICs4ezpB-dw">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_ZPIbMZGcEfGICs4ezpB-dw" value="2"/>
+          <upperValue xmi:type="uml:LiteralInteger" xmi:id="_G8m0IJGeEfGICs4ezpB-dw" value="2"/>
+        </ownedAttribute>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_0w9DYJGaEfGICs4ezpB-dw" name="HydraulicCycle"/>
+      <packagedElement xmi:type="uml:Association" xmi:id="_XyLVAJGcEfGICs4ezpB-dw" memberEnd="_XyL8EpGcEfGICs4ezpB-dw _XyMjIpGcEfGICs4ezpB-dw">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_XyL8EJGcEfGICs4ezpB-dw" source="org.eclipse.papyrus">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_XyL8EZGcEfGICs4ezpB-dw" key="nature" value="UML_Nature"/>
+        </eAnnotations>
+        <ownedEnd xmi:type="uml:Property" xmi:id="_XyMjIpGcEfGICs4ezpB-dw" name="brakeSystem" type="_7tn3YJGWEfGICs4ezpB-dw" association="_XyLVAJGcEfGICs4ezpB-dw"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="_ZPHNEJGcEfGICs4ezpB-dw" memberEnd="_ZPIbMJGcEfGICs4ezpB-dw _ZPIbM5GcEfGICs4ezpB-dw">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_ZPH0IJGcEfGICs4ezpB-dw" source="org.eclipse.papyrus">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_ZPH0IZGcEfGICs4ezpB-dw" key="nature" value="UML_Nature"/>
+        </eAnnotations>
+        <ownedEnd xmi:type="uml:Property" xmi:id="_ZPIbM5GcEfGICs4ezpB-dw" name="hydraulicSystem" type="_wwUfgJGaEfGICs4ezpB-dw" association="_ZPHNEJGcEfGICs4ezpB-dw"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_7nNMsJGeEfGICs4ezpB-dw" name="FrontDisc">
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_Sfk1I5GrEfGICs4ezpB-dw" name="brakePad" type="_jB4AQJGfEfGICs4ezpB-dw" aggregation="composite" association="_Sfk1IJGrEfGICs4ezpB-dw">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_SflcMJGrEfGICs4ezpB-dw" value="2"/>
+          <upperValue xmi:type="uml:LiteralInteger" xmi:id="_V_2ogJGsEfGICs4ezpB-dw" value="2"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_LFwdAJGtEfGICs4ezpB-dw" name="diameter">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+          <defaultValue xmi:type="uml:LiteralReal" xmi:id="_A8htwJGuEfGICs4ezpB-dw" value="250.0"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_hhvx0JHBEfGICs4ezpB-dw" name="thickness">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+          <defaultValue xmi:type="uml:LiteralReal" xmi:id="_lK97QJHBEfGICs4ezpB-dw" value="5.0"/>
+        </ownedAttribute>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_9bAsoJGeEfGICs4ezpB-dw" name="RearDisc">
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_RuCqgJGrEfGICs4ezpB-dw" name="brakePad" type="_jB4AQJGfEfGICs4ezpB-dw" aggregation="composite" association="_RuBcYJGrEfGICs4ezpB-dw">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_RuCqgZGrEfGICs4ezpB-dw" value="2"/>
+          <upperValue xmi:type="uml:LiteralInteger" xmi:id="_S7I6UJGsEfGICs4ezpB-dw" value="2"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_wyvXAJG-EfGICs4ezpB-dw" name="diameter">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+          <defaultValue xmi:type="uml:LiteralReal" xmi:id="_0vQ28JG-EfGICs4ezpB-dw" value="220.0"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_m9wHgJHBEfGICs4ezpB-dw" name="thickness">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+          <defaultValue xmi:type="uml:LiteralReal" xmi:id="_pNc5QJHBEfGICs4ezpB-dw" value="3.0"/>
+        </ownedAttribute>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="__RlMsJGeEfGICs4ezpB-dw" name="Caliper">
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_QkJDMpGrEfGICs4ezpB-dw" name="caliperBlock" type="_AebaUJGfEfGICs4ezpB-dw" aggregation="composite" association="_QkIcIJGrEfGICs4ezpB-dw">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_QkJqQJGrEfGICs4ezpB-dw" value="2"/>
+          <upperValue xmi:type="uml:LiteralInteger" xmi:id="_OSJV8JGsEfGICs4ezpB-dw" value="2"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_bKlmAJHCEfGICs4ezpB-dw" name="material">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+          <defaultValue xmi:type="uml:LiteralString" xmi:id="_eLw4AJHCEfGICs4ezpB-dw" value="alloyA"/>
+        </ownedAttribute>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_AebaUJGfEfGICs4ezpB-dw" name="CaliperBlock"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_jB4AQJGfEfGICs4ezpB-dw" name="BrakePad"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_KFjEkJGqEfGICs4ezpB-dw" name="FrontBrakeAssembly">
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_DF7xopGrEfGICs4ezpB-dw" name="frontDisc" type="_7nNMsJGeEfGICs4ezpB-dw" aggregation="composite" association="_DF7KkJGrEfGICs4ezpB-dw">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_DF7xo5GrEfGICs4ezpB-dw" value="1"/>
+          <upperValue xmi:type="uml:LiteralInteger" xmi:id="_8pSB0JGrEfGICs4ezpB-dw" value="1"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_DvE1QpGrEfGICs4ezpB-dw" name="caliper" type="__RlMsJGeEfGICs4ezpB-dw" aggregation="composite" association="_DvEOMJGrEfGICs4ezpB-dw">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_DvFcUJGrEfGICs4ezpB-dw" value="1"/>
+          <upperValue xmi:type="uml:LiteralInteger" xmi:id="_KefeIJGsEfGICs4ezpB-dw" value="1"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_5w024pG_EfGICs4ezpB-dw" name="brakePad" type="_jB4AQJGfEfGICs4ezpB-dw" aggregation="composite" association="_5w0P0JG_EfGICs4ezpB-dw">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_5w0245G_EfGICs4ezpB-dw" value="4"/>
+          <upperValue xmi:type="uml:LiteralInteger" xmi:id="_Bui7YJHAEfGICs4ezpB-dw" value="4"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_bmLgYJHDEfGICs4ezpB-dw" name="assemblyType">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+          <defaultValue xmi:type="uml:LiteralString" xmi:id="_fGEHoJHDEfGICs4ezpB-dw" value="disc"/>
+        </ownedAttribute>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_LRSe8JGqEfGICs4ezpB-dw" name="RearBrakeAssembly">
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_CTSzwpGrEfGICs4ezpB-dw" name="rearDisc" type="_9bAsoJGeEfGICs4ezpB-dw" aggregation="composite" association="_CTSMsJGrEfGICs4ezpB-dw">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_CTSzw5GrEfGICs4ezpB-dw" value="1"/>
+          <upperValue xmi:type="uml:LiteralInteger" xmi:id="_49XJsJGrEfGICs4ezpB-dw" value="1"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_EhH9QZGrEfGICs4ezpB-dw" name="caliper" type="__RlMsJGeEfGICs4ezpB-dw" aggregation="composite" association="_EhHWMJGrEfGICs4ezpB-dw">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_EhH9QpGrEfGICs4ezpB-dw" value="1"/>
+          <upperValue xmi:type="uml:LiteralInteger" xmi:id="_HWtN0JGsEfGICs4ezpB-dw" value="1"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_2BHq8JG_EfGICs4ezpB-dw" name="brakePad" type="_jB4AQJGfEfGICs4ezpB-dw" aggregation="composite" association="_2BGc0JG_EfGICs4ezpB-dw">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2BHq8ZG_EfGICs4ezpB-dw" value="2"/>
+          <upperValue xmi:type="uml:LiteralInteger" xmi:id="_Gj0oQJHAEfGICs4ezpB-dw" value="2"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_g5sBYJHDEfGICs4ezpB-dw" name="assemblyType">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+          <defaultValue xmi:type="uml:LiteralString" xmi:id="_joctsJHDEfGICs4ezpB-dw" value="disc"/>
+        </ownedAttribute>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="_Q5_z4JGqEfGICs4ezpB-dw" memberEnd="_Q6Aa8pGqEfGICs4ezpB-dw _Q6BCApGqEfGICs4ezpB-dw">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_Q6Aa8JGqEfGICs4ezpB-dw" source="org.eclipse.papyrus">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_Q6Aa8ZGqEfGICs4ezpB-dw" key="nature" value="UML_Nature"/>
+        </eAnnotations>
+        <ownedEnd xmi:type="uml:Property" xmi:id="_Q6BCApGqEfGICs4ezpB-dw" name="brakeSystem" type="_7tn3YJGWEfGICs4ezpB-dw" association="_Q5_z4JGqEfGICs4ezpB-dw"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="_RdhXsJGqEfGICs4ezpB-dw" memberEnd="_Rdh-wpGqEfGICs4ezpB-dw _Rdh-xZGqEfGICs4ezpB-dw">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_Rdh-wJGqEfGICs4ezpB-dw" source="org.eclipse.papyrus">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_Rdh-wZGqEfGICs4ezpB-dw" key="nature" value="UML_Nature"/>
+        </eAnnotations>
+        <ownedEnd xmi:type="uml:Property" xmi:id="_Rdh-xZGqEfGICs4ezpB-dw" name="brakeSystem" type="_7tn3YJGWEfGICs4ezpB-dw" association="_RdhXsJGqEfGICs4ezpB-dw"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="_CTSMsJGrEfGICs4ezpB-dw" memberEnd="_CTSzwpGrEfGICs4ezpB-dw _CTSzxZGrEfGICs4ezpB-dw">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_CTSzwJGrEfGICs4ezpB-dw" source="org.eclipse.papyrus">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_CTSzwZGrEfGICs4ezpB-dw" key="nature" value="UML_Nature"/>
+        </eAnnotations>
+        <ownedEnd xmi:type="uml:Property" xmi:id="_CTSzxZGrEfGICs4ezpB-dw" name="rearBrakeAssembly" type="_LRSe8JGqEfGICs4ezpB-dw" association="_CTSMsJGrEfGICs4ezpB-dw"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="_DF7KkJGrEfGICs4ezpB-dw" memberEnd="_DF7xopGrEfGICs4ezpB-dw _DF7xpZGrEfGICs4ezpB-dw">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_DF7xoJGrEfGICs4ezpB-dw" source="org.eclipse.papyrus">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_DF7xoZGrEfGICs4ezpB-dw" key="nature" value="UML_Nature"/>
+        </eAnnotations>
+        <ownedEnd xmi:type="uml:Property" xmi:id="_DF7xpZGrEfGICs4ezpB-dw" name="frontBrakeAssembly" type="_KFjEkJGqEfGICs4ezpB-dw" association="_DF7KkJGrEfGICs4ezpB-dw"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="_DvEOMJGrEfGICs4ezpB-dw" memberEnd="_DvE1QpGrEfGICs4ezpB-dw _DvFcUpGrEfGICs4ezpB-dw">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_DvE1QJGrEfGICs4ezpB-dw" source="org.eclipse.papyrus">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_DvE1QZGrEfGICs4ezpB-dw" key="nature" value="UML_Nature"/>
+        </eAnnotations>
+        <ownedEnd xmi:type="uml:Property" xmi:id="_DvFcUpGrEfGICs4ezpB-dw" name="frontBrakeAssembly" type="_KFjEkJGqEfGICs4ezpB-dw" association="_DvEOMJGrEfGICs4ezpB-dw"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="_EhHWMJGrEfGICs4ezpB-dw" memberEnd="_EhH9QZGrEfGICs4ezpB-dw _EhH9RJGrEfGICs4ezpB-dw">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_EhHWMZGrEfGICs4ezpB-dw" source="org.eclipse.papyrus">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_EhH9QJGrEfGICs4ezpB-dw" key="nature" value="UML_Nature"/>
+        </eAnnotations>
+        <ownedEnd xmi:type="uml:Property" xmi:id="_EhH9RJGrEfGICs4ezpB-dw" name="rearBrakeAssembly" type="_LRSe8JGqEfGICs4ezpB-dw" association="_EhHWMJGrEfGICs4ezpB-dw"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="_QkIcIJGrEfGICs4ezpB-dw" memberEnd="_QkJDMpGrEfGICs4ezpB-dw _QkJqQpGrEfGICs4ezpB-dw">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_QkJDMJGrEfGICs4ezpB-dw" source="org.eclipse.papyrus">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_QkJDMZGrEfGICs4ezpB-dw" key="nature" value="UML_Nature"/>
+        </eAnnotations>
+        <ownedEnd xmi:type="uml:Property" xmi:id="_QkJqQpGrEfGICs4ezpB-dw" name="caliper" type="__RlMsJGeEfGICs4ezpB-dw" association="_QkIcIJGrEfGICs4ezpB-dw"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="_RuBcYJGrEfGICs4ezpB-dw" memberEnd="_RuCqgJGrEfGICs4ezpB-dw _RuCqg5GrEfGICs4ezpB-dw">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_RuCDcJGrEfGICs4ezpB-dw" source="org.eclipse.papyrus">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_RuCDcZGrEfGICs4ezpB-dw" key="nature" value="UML_Nature"/>
+        </eAnnotations>
+        <ownedEnd xmi:type="uml:Property" xmi:id="_RuCqg5GrEfGICs4ezpB-dw" name="rearDisc" type="_9bAsoJGeEfGICs4ezpB-dw" association="_RuBcYJGrEfGICs4ezpB-dw"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="_Sfk1IJGrEfGICs4ezpB-dw" memberEnd="_Sfk1I5GrEfGICs4ezpB-dw _SflcMpGrEfGICs4ezpB-dw">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_Sfk1IZGrEfGICs4ezpB-dw" source="org.eclipse.papyrus">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_Sfk1IpGrEfGICs4ezpB-dw" key="nature" value="UML_Nature"/>
+        </eAnnotations>
+        <ownedEnd xmi:type="uml:Property" xmi:id="_SflcMpGrEfGICs4ezpB-dw" name="frontDisc" type="_7nNMsJGeEfGICs4ezpB-dw" association="_Sfk1IJGrEfGICs4ezpB-dw"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="_2BGc0JG_EfGICs4ezpB-dw" memberEnd="_2BHq8JG_EfGICs4ezpB-dw _2BHq85G_EfGICs4ezpB-dw">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_2BHD4JG_EfGICs4ezpB-dw" source="org.eclipse.papyrus">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_2BHD4ZG_EfGICs4ezpB-dw" key="nature" value="UML_Nature"/>
+        </eAnnotations>
+        <ownedEnd xmi:type="uml:Property" xmi:id="_2BHq85G_EfGICs4ezpB-dw" name="rearBrakeAssembly" type="_LRSe8JGqEfGICs4ezpB-dw" association="_2BGc0JG_EfGICs4ezpB-dw"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="_5w0P0JG_EfGICs4ezpB-dw" memberEnd="_5w024pG_EfGICs4ezpB-dw _5w1d8ZG_EfGICs4ezpB-dw">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_5w024JG_EfGICs4ezpB-dw" source="org.eclipse.papyrus">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_5w024ZG_EfGICs4ezpB-dw" key="nature" value="UML_Nature"/>
+        </eAnnotations>
+        <ownedEnd xmi:type="uml:Property" xmi:id="_5w1d8ZG_EfGICs4ezpB-dw" name="frontBrakeAssembly" type="_KFjEkJGqEfGICs4ezpB-dw" association="_5w0P0JG_EfGICs4ezpB-dw"/>
+      </packagedElement>
+    </packagedElement>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_CyxAAJGVEfGICs4ezpB-dw">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_Cy1RcJGVEfGICs4ezpB-dw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/papyrus/sysml/1.6/SysML#/"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="pathmap://SysML16_PROFILES/SysML.profile.uml#SysML"/>
+    </profileApplication>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_C0bM4JGVEfGICs4ezpB-dw">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_C0bz8JGVEfGICs4ezpB-dw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/papyrus/sysml/1.6/SysML#//activities"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="pathmap://SysML16_PROFILES/SysML.profile.uml#SysML.package_packagedElement_Activities"/>
+    </profileApplication>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_C0eQMJGVEfGICs4ezpB-dw">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_C0eQMZGVEfGICs4ezpB-dw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/papyrus/sysml/1.6/SysML#//allocations"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="pathmap://SysML16_PROFILES/SysML.profile.uml#SysML.package_packagedElement_Allocations"/>
+    </profileApplication>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_C0eQMpGVEfGICs4ezpB-dw">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_C0eQM5GVEfGICs4ezpB-dw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/papyrus/sysml/1.6/SysML#//blocks"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="pathmap://SysML16_PROFILES/SysML.profile.uml#SysML.package_packagedElement_Blocks"/>
+    </profileApplication>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_C0e3QJGVEfGICs4ezpB-dw">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_C0e3QZGVEfGICs4ezpB-dw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/papyrus/sysml/1.6/SysML#//constraintblocks"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="pathmap://SysML16_PROFILES/SysML.profile.uml#SysML.package_packagedElement_ConstraintBlocks"/>
+    </profileApplication>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_C0e3QpGVEfGICs4ezpB-dw">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_C0feUJGVEfGICs4ezpB-dw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/papyrus/sysml/1.6/SysML#//deprecatedelements"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="pathmap://SysML16_PROFILES/SysML.profile.uml#SysML.package_packagedElement_DeprecatedElements"/>
+    </profileApplication>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_C0feUZGVEfGICs4ezpB-dw">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_C0feUpGVEfGICs4ezpB-dw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/papyrus/sysml/1.6/SysML#//modelelements"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="pathmap://SysML16_PROFILES/SysML.profile.uml#SysML.package_packagedElement_ModelElements"/>
+    </profileApplication>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_C0gFYJGVEfGICs4ezpB-dw">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_C0gFYZGVEfGICs4ezpB-dw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/papyrus/sysml/1.6/SysML#//portsandflows"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="pathmap://SysML16_PROFILES/SysML.profile.uml#SysML.package_packagedElement_Ports_u0026Flows"/>
+    </profileApplication>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_C0gFYpGVEfGICs4ezpB-dw">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_C0gFY5GVEfGICs4ezpB-dw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/papyrus/sysml/1.6/SysML#//requirements"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="pathmap://SysML16_PROFILES/SysML.profile.uml#SysML.package_packagedElement_Requirements"/>
+    </profileApplication>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_C0gscJGVEfGICs4ezpB-dw">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_C0gscZGVEfGICs4ezpB-dw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/uml2/5.0.0/UML/Profile/Standard#/"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="pathmap://UML_PROFILES/Standard.profile.uml#_0"/>
+    </profileApplication>
+  </uml:Model>
+  <Blocks:Block xmi:id="_7t3H8JGWEfGICs4ezpB-dw" base_Class="_7tn3YJGWEfGICs4ezpB-dw"/>
+  <Blocks:Block xmi:id="_wwhT0JGaEfGICs4ezpB-dw" base_Class="_wwUfgJGaEfGICs4ezpB-dw"/>
+  <Blocks:Block xmi:id="_0xB74JGaEfGICs4ezpB-dw" base_Class="_0w9DYJGaEfGICs4ezpB-dw"/>
+  <Blocks:Block xmi:id="_7nQQAJGeEfGICs4ezpB-dw" base_Class="_7nNMsJGeEfGICs4ezpB-dw"/>
+  <Blocks:Block xmi:id="_9bDv8JGeEfGICs4ezpB-dw" base_Class="_9bAsoJGeEfGICs4ezpB-dw"/>
+  <Blocks:Block xmi:id="__RoQAJGeEfGICs4ezpB-dw" base_Class="__RlMsJGeEfGICs4ezpB-dw"/>
+  <Blocks:Block xmi:id="_Aed2kJGfEfGICs4ezpB-dw" base_Class="_AebaUJGfEfGICs4ezpB-dw"/>
+  <Blocks:Block xmi:id="_jCENgJGfEfGICs4ezpB-dw" base_Class="_jB4AQJGfEfGICs4ezpB-dw"/>
+  <Blocks:Block xmi:id="_KFmu8JGqEfGICs4ezpB-dw" base_Class="_KFjEkJGqEfGICs4ezpB-dw"/>
+  <Blocks:Block xmi:id="_LRU7MJGqEfGICs4ezpB-dw" base_Class="_LRSe8JGqEfGICs4ezpB-dw"/>
+</xmi:XMI>

@@ -1,0 +1,31 @@
+# fix(Vitruv): add Lombok dependency to allow Vitruv project to build
+diff --git a/Vitruv-Branching-Tool/Vitruv/pom.xml b/Vitruv-Branching-Tool/Vitruv/pom.xml
+index 7a68cfe..00035b7 100644
+--- a/Vitruv-Branching-Tool/Vitruv/pom.xml
++++ b/Vitruv-Branching-Tool/Vitruv/pom.xml
+@@ -51,6 +51,25 @@
+         <sonar.projectKey>vitruv-tools_Vitruv</sonar.projectKey>
+     </properties>
+ 
++    <build>
++        <plugins>
++            <plugin>
++                <groupId>org.apache.maven.plugins</groupId>
++                <artifactId>maven-compiler-plugin</artifactId>
++                <version>3.14.1</version>
++                <configuration>
++                    <annotationProcessorPaths>
++                        <path>
++                            <groupId>org.projectlombok</groupId>
++                            <artifactId>lombok</artifactId>
++                            <version>1.18.46</version>
++                        </path>
++                    </annotationProcessorPaths>
++                </configuration>
++            </plugin>
++        </plugins>
++    </build>
++
+     <!-- Dependency Management -->
+     <dependencyManagement>
+         <dependencies>

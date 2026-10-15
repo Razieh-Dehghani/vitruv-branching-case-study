@@ -1,0 +1,22 @@
+import "http://vitruv.tools/methodologisttemplate/sysml" as sysml
+import "http://vitruv.tools/cad/model" as cad
+
+reactions: package2CadModel
+in reaction to changes in sysml
+execute actions in cad
+
+reaction PackageInsertedIntoPackage {
+    after element sysml::Package inserted in sysml::Package[nestedPackages]
+    call correspondPackageWithCadModel(affectedEObject, newValue)
+}
+
+routine correspondPackageWithCadModel(sysml::Package parentPackage, sysml::Package newPackage) {
+    match {
+        require absence of cad::CAD_Model corresponding to newPackage
+
+        val cadModel = retrieve cad::CAD_Model corresponding to parentPackage
+    }
+    update {
+        addCorrespondenceBetween(newPackage, cadModel)
+    }
+}
