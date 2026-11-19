@@ -2,7 +2,7 @@
 
 This repository is the replication package for the paper
 
-> *TODO: authors.* **TODO: title.** Submitted to ECMFA 2027 (Journal of Object Technology).
+> *TODO: authors.* **Merging Models that Keep Each Other Consistent: A Conflict Classification and a Scenario-Based Evaluation on SysML and CAD Models.** Submitted to ECMFA 2027 (Journal of Object Technology).
 
 It contains a scenario-based case study that evaluates a Git-based branching and semantic merging extension of the
 [Vitruvius](https://vitruv.tools) framework on a SysML/CAD virtual single underlying model (V-SUM).
